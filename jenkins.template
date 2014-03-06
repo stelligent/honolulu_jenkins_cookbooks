@@ -2,7 +2,7 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "AWS CloudFormation Sample Template: Launches OpsWorks stack, layer, instances and associated resources to run a PHP application. ** This template creates one or more Amazon EC2 instances. You will be billed for the AWS resources used if you create a stack from this template.",
     "Resources": {
-        "myStack": {
+        "jenkins_stack": {
             "Type": "AWS::OpsWorks::Stack",
             "Properties": {
                 "Name": {
@@ -110,15 +110,15 @@
             "UseCustomCookbooks": true,
             "CustomCookbooksSource": {
                 "Type": "git",
-                "Url": "https://github.com/stelligent/honolulu_answers_cookbooks.git"
-                },
+                "Url": "https://github.com/stelligent/honolulu_jenkins_cookbooks.git"
+                }
             }
         },
-        "myLayer": {
+        "jenkins_layer": {
             "Type": "AWS::OpsWorks::Layer",
             "Properties": {
                 "StackId": {
-                    "Ref": "myStack"
+                    "Ref": "jenkins_stack"
                 },
                 "Name": "Jenkins Server Layer",
                 "Type": "custom",
@@ -143,15 +143,15 @@
                 }
             }
         },
-        "myInstance1": {
+        "jenkins": {
             "Type": "AWS::OpsWorks::Instance",
             "Properties": {
                 "StackId": {
-                    "Ref": "myStack"
+                    "Ref": "jenkins_stack"
                 },
                 "LayerIds": [
                     {
-                        "Ref": "myLayer"
+                        "Ref": "jenkins_layer"
                     }
                 ],
                 "InstallUpdatesOnBoot": true,
@@ -237,7 +237,7 @@
     "Outputs": {
         "StackId": {
             "Value": {
-                "Ref": "myStack"
+                "Ref": "jenkins_stack"
             }
         }
     }
