@@ -20,6 +20,13 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //THE SOFTWARE.
 
+import hudson.slaves.EnvironmentVariablesNodeProperty;
+import hudson.slaves.EnvironmentVariablesNodeProperty.Entry;
+import hudson.util.DescribableList;
+import hudson.slaves.NodePropertyDescriptor;
+import hudson.slaves.NodeProperty;
+
+
 // takes in a list of key-value pairs, connected by equals signs and makes them Jenkins variables
 // ie. groovy create_vars.groovy key1=value1 key2=value2 key3=value3
 
