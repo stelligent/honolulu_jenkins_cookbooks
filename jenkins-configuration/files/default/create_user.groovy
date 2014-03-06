@@ -26,7 +26,7 @@ def constructMatrixAuthorizationStrategy(user, role) {
   return authzStrategy;
 }
 
-def configurePrivateSecurityRealm() {
+def configurePrivateSecurityRealm(user, password) {
   doNotAllowSignup = false;
   hudsonPrivateSecurityRealm = new HudsonPrivateSecurityRealm(doNotAllowSignup);
 
