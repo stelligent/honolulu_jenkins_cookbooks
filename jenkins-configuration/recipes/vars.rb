@@ -23,18 +23,6 @@
 jenkins_url = "http://localhost:8080"
 # jenkins_home = '/var/lib/jenkins'
 
-#classloader problem with asking groovy plugin to do stuff
-service "jenkins" do
-  action :restart
-end
-
-ruby_block "sleep a bit" do
-  block do
-    sleep 180
-  end
-  action :create
-end
-
 global_vars = node["pipeline"]["global_vars"].collect { |k,v| "#{k}=#{v} "}.join
 
 cookbook_file "script to add Jenkins global variables" do
