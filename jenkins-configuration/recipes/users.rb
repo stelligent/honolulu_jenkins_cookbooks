@@ -24,8 +24,8 @@ jenkins_url = "http://localhost:8080"
 # jenkins_home = '/var/lib/jenkins'
 
 cookbook_file "script to add Jenkins global variables" do
-  source "create_vars.groovy"
-  path "/tmp/create_vars.groovy"
+  source "create_user.groovy"
+  path "/tmp/create_user.groovy"
 end
 
 users = node["pipeline"]["users"].collect {|user| "#{user[0]} #{user[1]} #{user[2]}"}.each do |args|
