@@ -42,7 +42,7 @@
                       },
                       "pipeline": {
                         "source" : "https://github.com/stelligent/honolulu_answers.git",
-                        "jobs" : [ "bluegreen", "build-infrastructure", "deploy-application", "jenkins-test", "terminate-environment", "test-application", "test-infrastructure", "trigger-stage"]
+                        "jobs" : [ "commit-stage", "acceptance-stage","bluegreen", "build-infrastructure", "deploy-application", "jenkins-test", "terminate-environment", "test-application", "test-infrastructure", "trigger-stage"]
                       },
 
                       "jenkins": {
