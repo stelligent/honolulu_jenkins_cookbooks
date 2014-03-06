@@ -5,13 +5,13 @@ import hudson.security.HudsonPrivateSecurityRealm;
 if(args.length != 3) {
   println("must specify the user, password, and role");
   System.exit(1);
-}
-else {
+} else {
   user = args[0];
   password = args[1];
-  if args[2] == "read" {
+
+  if (args[2] == "read") {
     role = Hudson.READ
-  } else if args[2] == "admin" {
+  } else if (args[2] == "admin") {
     role = Hudson.ADMINISTER
   } else {
     println "${role} is an invalid role, defaulting to read-only."
