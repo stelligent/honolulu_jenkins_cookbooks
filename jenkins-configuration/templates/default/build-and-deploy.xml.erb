@@ -4,17 +4,8 @@
   <description></description>
   <keepDependencies>false</keepDependencies>
   <properties>
-    <hudson.model.ParametersDefinitionProperty>
-      <parameterDefinitions>
-        <hudson.model.StringParameterDefinition>
-          <name>stack_name</name>
-          <description></description>
-          <defaultValue></defaultValue>
-        </hudson.model.StringParameterDefinition>
-      </parameterDefinitions>
-    </hudson.model.ParametersDefinitionProperty>
     <se.diabol.jenkins.pipeline.PipelineProperty plugin="delivery-pipeline-plugin@0.6.10">
-      <taskName>terminate-environment</taskName>
+      <taskName>build-and-deploy</taskName>
       <stageName>acceptance</stageName>
     </se.diabol.jenkins.pipeline.PipelineProperty>
   </properties>
@@ -66,8 +57,29 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>aws cloudformation delete-stack --stack-name ${stack_name} --region ${region}</command>
+      <command>gem install trollop 
+gem install aws-sdk-core --pre
+export stack_name=HonoluluAnswers-`date +%Y%m%d%H%M%S`
+aws cloudformation create-stack --stack-name $stack_name --template-body &quot;`cat infrastructure/config/honolulu.template`&quot; --region ${region}  --disable-rollback 
+ruby infrastructure/bin/monitor_stack.rb  --stack $stack_name
+echo stack_name=$stack_name &gt; stackname.txt</command>
     </hudson.tasks.Shell>
+    <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.20">
+      <configs>
+        <hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+          <configs>
+            <hudson.plugins.parameterizedtrigger.FileBuildParameters>
+              <propertiesFile>stackname.txt</propertiesFile>
+              <failTriggerOnMissing>true</failTriggerOnMissing>
+            </hudson.plugins.parameterizedtrigger.FileBuildParameters>
+          </configs>
+          <projects>test-application</projects>
+          <condition>ALWAYS</condition>
+          <triggerWithNoParameters>false</triggerWithNoParameters>
+          <buildAllNodesWithLabel>false</buildAllNodesWithLabel>
+        </hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+      </configs>
+    </hudson.plugins.parameterizedtrigger.TriggerBuilder>
   </builders>
   <publishers/>
   <buildWrappers>

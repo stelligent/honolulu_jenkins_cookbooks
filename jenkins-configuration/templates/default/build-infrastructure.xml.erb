@@ -57,12 +57,22 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>infrastructure/build_infrastructure.sh</command>
+      <command>gem install bundle
+bundle install 
+export stack_name=HonoluluAnswers-`date +%Y%m%d%H%M%S`
+aws cloudformation create-stack --stack-name $stack_name --template-body &quot;`cat infrastructure/config/honolulu.template`&quot; --region ${region}  --disable-rollback 
+ruby infrastructure/bin/monitor_stack.rb  --stack $stack_name
+echo stack_name=$stack_name &gt; stackname.txt</command>
     </hudson.tasks.Shell>
     <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.20">
       <configs>
         <hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
-          <configs class="empty-list"/>
+          <configs>
+            <hudson.plugins.parameterizedtrigger.FileBuildParameters>
+              <propertiesFile>stackname.xt</propertiesFile>
+              <failTriggerOnMissing>false</failTriggerOnMissing>
+            </hudson.plugins.parameterizedtrigger.FileBuildParameters>
+          </configs>
           <projects>test-infrastructure</projects>
           <condition>ALWAYS</condition>
           <triggerWithNoParameters>false</triggerWithNoParameters>
@@ -75,10 +85,10 @@
   <buildWrappers>
     <ruby-proxy-object>
       <ruby-object ruby-class="Jenkins::Plugin::Proxies::BuildWrapper" pluginid="rvm">
-        <pluginid pluginid="rvm" ruby-class="String">rvm</pluginid>
         <object ruby-class="RvmWrapper" pluginid="rvm">
           <impl pluginid="rvm" ruby-class="String">1.9.3</impl>
         </object>
+        <pluginid pluginid="rvm" ruby-class="String">rvm</pluginid>
       </ruby-object>
     </ruby-proxy-object>
   </buildWrappers>
