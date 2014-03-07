@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "AWS CloudFormation Sample Template: Launches OpsWorks stack, layer, instances and associated resources to run a PHP application. ** This template creates one or more Amazon EC2 instances. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Description": "This CloudFormation template creates a Jenkins server that houses a pipeline for the Honolulu Answers application. This is a proof of concept of getting that application up and running in the cloud.",
     "Resources": {
         "jenkinsstack": {
             "Type": "AWS::OpsWorks::Stack",
@@ -188,11 +188,14 @@
                         "PolicyDocument": {
                             "Statement": [
                                 {
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "*"
-                                    ],
-                                    "Resource": "*"
+                                  "Version": "2012-10-17",
+                                  "Statement": [
+                                    {
+                                      "Effect": "Allow",
+                                      "Action": "*",
+                                      "Resource": "*"
+                                    }
+                                  ]
                                 }
                             ]
                         }
