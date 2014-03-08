@@ -158,7 +158,7 @@
                 ],
                 "InstallUpdatesOnBoot": true,
                 "Os" : "Amazon Linux",
-                "InstanceType": "m1.large",
+                "InstanceType": "m1.small",
                 "RootDeviceType": "ebs",
                 "Architecture": "x86_64"
             }
