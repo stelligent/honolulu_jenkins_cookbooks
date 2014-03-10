@@ -136,7 +136,7 @@
                     "RubygemsVersion": "2.1.11"
                 },
                 "Packages": [
-                    "readline-devel", "libyaml-devel", "libffi-devel", "mlocate", "libxml2", "postgresql", "memcached", "ruby19-devel", "libxml2-devel", "libxslt-devel", "git", "make", "gcc", "hunspell", "gettext", "postfix", "cyrus-sasl", "cyrus-sasl-devel", "sqlite"
+                    "readline-devel", "libyaml-devel", "libffi-devel", "mlocate", "libxml2", "postgresql",  "postgresql-devel", "memcached", "ruby19-devel", "libxml2-devel", "libxslt-devel", "git", "make", "gcc", "hunspell", "gettext", "postfix", "cyrus-sasl", "cyrus-sasl-devel", "sqlite"
                 ],
                 "CustomRecipes": {
                     "Deploy": [
