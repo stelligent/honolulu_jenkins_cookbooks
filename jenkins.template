@@ -42,7 +42,7 @@
                       },
                       "pipeline": {
                         "source" : "https://github.com/stelligent/honolulu_answers.git",
-                        "jobs" : [ "commit-stage", "acceptance-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage"],
+                        "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage"],
                         "global_vars" : { "region": { "Ref" : "AWS::Region" } },
                         "users" : [ [ "admin","admin","admin" ] ]
                       },

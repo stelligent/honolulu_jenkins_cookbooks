@@ -39,7 +39,6 @@ Feature: Scripted install of Jenkins
         Examples: 
             | jobname                 |
             | "commit-stage"          |
-            | "acceptance-stage"      |
             | "bluegreen"             |
             | "build-and-deploy"      |
             | "jenkins-test"          |
