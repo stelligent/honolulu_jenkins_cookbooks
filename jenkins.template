@@ -108,7 +108,6 @@
                   },
             "DefaultOs": "Amazon Linux",
             "DefaultAvailabilityZone": "us-west-2c",
-            "DefaultSshKeyName": "jonny-labs-west2",
             "UseCustomCookbooks": true,
             "CustomCookbooksSource": {
                 "Type": "git",
