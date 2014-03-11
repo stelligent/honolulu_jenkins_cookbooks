@@ -158,7 +158,7 @@
                 ],
                 "InstallUpdatesOnBoot": true,
                 "Os" : "Amazon Linux",
-                "InstanceType": "m1.small",
+                "InstanceType": "c3.large",
                 "RootDeviceType": "ebs",
                 "Architecture": "x86_64",
                 "Hostname": "jenkins"
