@@ -17,7 +17,7 @@ Feature: Scripted install of Jenkins
 
     Scenario: Is the hostname set correctly?
         When I run "hostname"
-        Then I should see "jenkins"
+        Then I should see "jenkins1"
 
     Scenario: Is ruby 1.9.3 installed
         When I run "ruby -v"
