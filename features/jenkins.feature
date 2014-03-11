@@ -36,13 +36,13 @@ Feature: Scripted install of Jenkins
     Scenario Outline: Are the pipeline jobs present?
         When I run "ls /var/lib/jenkins/jobs"
         Then I should see <jobname>
-
         Examples: 
-            | jobname               |
-            | "acceptance-stage"    |
-            | "capacity-stage"      |
-            | "commit-stage"        |
-            | "exploratory-stage"   |
-            | "preproduction-stage" |
-            | "production-stage"    |
-            | "trigger-stage"       |
+            | jobname                 |
+            | "commit-stage"          |
+            | "acceptance-stage"      |
+            | "bluegreen"             |
+            | "build-and-deploy"      |
+            | "jenkins-test"          |
+            | "terminate-environment" |
+            | "test-application"      |
+            | "trigger-stage"         |
