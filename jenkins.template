@@ -161,8 +161,6 @@
                 "InstanceType": "c3.large",
                 "RootDeviceType": "ebs",
                 "Architecture": "x86_64",
-                "Hostname": "jenkins"
-
             }
         },
         "OpsWorksServiceRole": {
