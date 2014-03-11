@@ -12,7 +12,7 @@ Feature: Scripted install of Jenkins
         Then I should see a stack with one layer
         And  the layer should be named "Jenkins Server Layer"
         And  I should see a layer with one instance
-        And  the instance should be named "jenkins"
+        And  the instance should be named "jenkins1"
         And  the instance should be running
 
     Scenario: Is the hostname set correctly?
