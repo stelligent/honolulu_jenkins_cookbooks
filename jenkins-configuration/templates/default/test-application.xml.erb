@@ -66,10 +66,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>gem install cucumber
-cd infrastructure
-cucumber
-</command>
+      <command>infrastructure/test-application.sh</command>
     </hudson.tasks.Shell>
     <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.20">
       <configs>

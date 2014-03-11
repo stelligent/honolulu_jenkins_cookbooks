@@ -57,12 +57,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>gem install trollop 
-gem install aws-sdk-core --pre
-export stack_name=HonoluluAnswers-`date +%Y%m%d%H%M%S`
-aws cloudformation create-stack --stack-name $stack_name --template-body &quot;`cat infrastructure/config/honolulu.template`&quot; --region ${region}  --disable-rollback --capabilities=&quot;CAPABILITY_IAM&quot;
-ruby infrastructure/bin/monitor_stack.rb  --stack $stack_name
-echo stack_name=$stack_name &gt; stackname.txt</command>
+      <command>infrastructure/build-and-deploy.sh</command>
     </hudson.tasks.Shell>
     <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.20">
       <configs>

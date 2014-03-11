@@ -66,7 +66,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>aws cloudformation delete-stack --stack-name ${stack_name} --region ${region}</command>
+      <command>infrastructure/terminate-env.sh</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
