@@ -25,23 +25,9 @@ how to use this repository
 
 This repository is design to be used as the custom Chef cookbooks repository for a Jenkins stack built using Amazon's OpsWorks service. I suppose you could use it to build a custom Jenkins server without using OpsWorks, but I haven't tried that so if you give it a shot you're on your own. :)
 
-If you're building your OpsWorks script using the Ruby SDK, it'll look something like this:
+Included in the repository is CloudFormation template that will handle building the appropriate IAM roles and OpsWorks stack. To run it, you will need the AWS CLI tool installed and configured. Then, just pull down the repo andrun this command:
 
-    stack_params = {
-      name: "Jenkins Server", 
-      region: "us-west-2", 
-      default_os: 'Amazon Linux',
-      service_role_arn: 'arn:aws:iam::123467890:role/aws-opsworks-service-role', 
-      default_instance_profile_arn: 'arn:aws:iam::123467890:instance-profile/jenkins',
-      custom_json: custom_json,
-      use_custom_cookbooks: true,
-      custom_cookbooks_source: {
-          type: 'git',
-          url: 'https://github.com/stelligent/honolulu_jenkins_cookbooks.git'
-        }
-    }
-
-    stack = ops.create_stack stack_params
+    aws cloudformation create-stack --stack-name Honolulu-Jenkins --template-body "`cat jenkins.template`"  --disable-rollback  --timeout-in-minutes 60
 
 how to update jenkins configuration:
 ====
