@@ -1,6 +1,15 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "This CloudFormation template creates a Jenkins server that houses a pipeline for the Honolulu Answers application. This is a proof of concept of getting that application up and running in the cloud.",
+    "Parameters" : {
+      "repository" : {
+        "Type" : "String",
+        "Default" : "https://github.com/stelligent/honolulu_answers.git",
+        "Description" : "The github repository where you code is stored. Note: this repoistory must be public."
+      }
+
+    },
+
     "Resources": {
         "jenkinsstack": {
             "Type": "AWS::OpsWorks::Stack",
@@ -41,7 +50,7 @@
                           ]
                       },
                       "pipeline": {
-                        "source" : "https://github.com/stelligent/honolulu_answers.git",
+                        "source" : { "Ref" : "repository" },
                         "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage"],
                         "global_vars" : { "region": { "Ref" : "AWS::Region" } },
                         "users" : [ [ "admin","admin","admin" ] ]
