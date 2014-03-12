@@ -28,7 +28,11 @@ This repository is design to be used as the custom Chef cookbooks repository for
 Included in the repository is CloudFormation template that will handle building the appropriate IAM roles and OpsWorks stack. To run it, you will need the AWS CLI tool installed and configured. Then, just pull down the repo andrun this command:
 
     aws cloudformation create-stack --stack-name Honolulu-Jenkins --template-body "`cat jenkins.template`"  --disable-rollback  --timeout-in-minutes 60
-    
+
+If you'd like to specify a github repository other than the Honolulu Answers app, you can pass in a parameter. The URL must be a github repository, and it must be a public repo.
+
+    --parameters ParameterKey=repository,ParameterValue=https://github.com/yourgithubrepo.git
+
 If you already have a Jenkins server running that this is supposed to replace, you can use the bluegreen job to update the Route 53 information to have it point to the new server. All job history will be lost.
 
 how to update jenkins configuration:
