@@ -96,6 +96,7 @@
                                      { "name" : "parameterized-trigger",         "version" : "2.20"    },
                                      { "name" : "postbuildscript",               "version" : "0.14"    },
                                      { "name" : "rake",                          "version" : "1.7.8"   },
+                                     { "name" : "rebuild",                       "version" : "1.21"    },
                                      { "name" : "ruby-runtime",                  "version" : "0.12"    },
                                      { "name" : "rubyMetrics",                   "version" : "1.5.0"   },
                                      { "name" : "run-condition",                 "version" : "0.10"    },
