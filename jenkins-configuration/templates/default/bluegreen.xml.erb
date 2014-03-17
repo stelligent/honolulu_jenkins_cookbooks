@@ -8,22 +8,22 @@
       <parameterDefinitions>
         <hudson.model.StringParameterDefinition>
           <name>blue</name>
-          <description></description>
+          <description>This refers to the current production environment. After this job is run the dns name you enter here will no longer be the production environment. eg. ec2-54-212-215-115.us-west-2.compute.amazonaws.com</description>
           <defaultValue></defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>green</name>
-          <description></description>
+          <description>This refers to the intended production environment. After this job is run, the dns name you enter here will be the new production environment. eg. ec2-54-212-355-115.us-west-2.compute.amazonaws.com</description>
           <defaultValue></defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>subdomain</name>
-          <description></description>
+          <description>This refers to the A record that you like to connect to. If you enter app, you will be connecting the IP to app.hostedzone.com</description>
           <defaultValue></defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>hostedzone</name>
-          <description></description>
+          <description>This refers to the Route53 zone that you would like to connect to. If you enter stelligentlabs.com, you'll be connecting your IP to app.stelligentlabs.com</description>
           <defaultValue></defaultValue>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
