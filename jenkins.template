@@ -6,6 +6,11 @@
         "Type" : "String",
         "Default" : "https://github.com/stelligent/honolulu_answers.git",
         "Description" : "The github repository where you code is stored. Note: this repoistory must be public."
+      },
+      "branch" : {
+        "Type" : "String",
+        "Default" : "master",
+        "Description" : "The git branch of the repository you'd like Jenkins to be configured to look at."
       }
 
     },
@@ -51,6 +56,7 @@
                       },
                       "pipeline": {
                         "source" : { "Ref" : "repository" },
+                        "branch" : { "Ref" : "branch"},
                         "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage"],
                         "global_vars" : { "region": { "Ref" : "AWS::Region" } },
                         "users" : [ [ "admin","admin","admin" ] ]
