@@ -4,10 +4,22 @@
   <description></description>
   <keepDependencies>false</keepDependencies>
   <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>pipeline_instance_id</name>
+          <description></description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
     <se.diabol.jenkins.pipeline.PipelineProperty plugin="delivery-pipeline-plugin@0.6.10">
       <taskName>build-and-deploy</taskName>
       <stageName>acceptance</stageName>
     </se.diabol.jenkins.pipeline.PipelineProperty>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.21">
+      <autoRebuild>false</autoRebuild>
+    </com.sonyericsson.rebuild.RebuildSettings>
   </properties>
   <scm class="hudson.plugins.git.GitSCM" plugin="git@1.4.0">
     <configVersion>2</configVersion>
@@ -67,6 +79,7 @@
               <propertiesFile>stackname.txt</propertiesFile>
               <failTriggerOnMissing>true</failTriggerOnMissing>
             </hudson.plugins.parameterizedtrigger.FileBuildParameters>
+            <hudson.plugins.parameterizedtrigger.CurrentBuildParameters/>
           </configs>
           <projects>test-application</projects>
           <condition>ALWAYS</condition>
@@ -80,10 +93,10 @@
   <buildWrappers>
     <ruby-proxy-object>
       <ruby-object ruby-class="Jenkins::Plugin::Proxies::BuildWrapper" pluginid="rvm">
+        <pluginid pluginid="rvm" ruby-class="String">rvm</pluginid>
         <object ruby-class="RvmWrapper" pluginid="rvm">
           <impl pluginid="rvm" ruby-class="String">1.9.3</impl>
         </object>
-        <pluginid pluginid="rvm" ruby-class="String">rvm</pluginid>
       </ruby-object>
     </ruby-proxy-object>
   </buildWrappers>
