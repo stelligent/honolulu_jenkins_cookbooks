@@ -1,21 +1,26 @@
+
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
   <description></description>
   <keepDependencies>false</keepDependencies>
-  <properties/>
+  <properties>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.21">
+      <autoRebuild>false</autoRebuild>
+    </com.sonyericsson.rebuild.RebuildSettings>
+  </properties>
   <scm class="hudson.plugins.git.GitSCM" plugin="git@1.4.0">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
         <name></name>
         <refspec></refspec>
-        <url><%= @source_repo %></url>
+        <url>https://github.com/stelligent/honolulu_jenkins_cookbooks.git</url>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>
     <branches>
       <hudson.plugins.git.BranchSpec>
-        <name>*/<%= @branch_specifier %></name>
+        <name>*/master</name>
       </hudson.plugins.git.BranchSpec>
     </branches>
     <disableSubmodules>false</disableSubmodules>
@@ -74,10 +79,10 @@ cucumber --color \
     </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
     <ruby-proxy-object>
       <ruby-object ruby-class="Jenkins::Plugin::Proxies::BuildWrapper" pluginid="rvm">
-        <pluginid pluginid="rvm" ruby-class="String">rvm</pluginid>
         <object ruby-class="RvmWrapper" pluginid="rvm">
           <impl pluginid="rvm" ruby-class="String">1.9.3</impl>
         </object>
+        <pluginid pluginid="rvm" ruby-class="String">rvm</pluginid>
       </ruby-object>
     </ruby-proxy-object>
   </buildWrappers>
