@@ -58,7 +58,10 @@
                         "source" : { "Ref" : "repository" },
                         "branch" : { "Ref" : "branch"},
                         "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage"],
-                        "global_vars" : { "region": { "Ref" : "AWS::Region" } },
+                        "global_vars" : { 
+                          "region": { "Ref" : "AWS::Region" },
+                          "sdb_domain" : "honolulu-jenkins-jonny-test"
+                          },
                         "users" : [ [ "admin","admin","admin" ] ]
                       },
 
