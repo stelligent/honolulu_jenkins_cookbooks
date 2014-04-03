@@ -31,6 +31,7 @@ cookbook_file "script to add Jenkins global variables" do
 end
 
 jenkins_cli "add global variables" do
+  Chef::Log.info "adding vars #{global_vars}"
   url jenkins_url
   command "groovy /tmp/create_vars.groovy #{global_vars}"
 end
