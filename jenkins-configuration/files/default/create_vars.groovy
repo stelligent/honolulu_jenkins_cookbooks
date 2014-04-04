@@ -21,17 +21,22 @@
 //THE SOFTWARE.
 
 import jenkins.model.Jenkins;
-
 import hudson.EnvVars;
 
 // takes in a list of key-value pairs, connected by equals signs and makes them Jenkins variables
 // ie. groovy create_vars.groovy key1=value1 key2=value2 key3=value3
 
+// A new Jenkins will have a null env vars, so set up an empty one to avoid NPEs
+entries = new DescribableList<NodeProperty<?>,NodePropertyDescriptor>();
+entries.add(new EnvironmentVariablesNodeProperty());
+Jenkins.getGlobalNodeProperties().replaceBy(entries);
+
+// Parse out args into varaibles
 EnvVars entries = new EnvVars();
 for (arg in args) {
- println "processing " + arg;
- pair = arg.split('=')
- entries.put(pair[0], pair[1])
+    pair = arg.split('=')
+    entries.put(pair[0], pair[1])
 }
 
+// Save to Jenkins
 Jenkins.instance.getGlobalNodeProperties()[0].getEnvVars().overrideExpandingAll(entries)
