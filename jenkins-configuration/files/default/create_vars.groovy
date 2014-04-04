@@ -32,7 +32,10 @@ import hudson.slaves.NodeProperty;
 // ie. groovy create_vars.groovy key1=value1 key2=value2 key3=value3
 
 // Zero out what was there
-Hudson.instance.getGlobalNodeProperties().replaceBy(Collections.singleton(new EnvironmentVariablesNodeProperty()));
+entries = new DescribableList<NodeProperty<?>,NodePropertyDescriptor>();
+entry = new EnvironmentVariablesNodeProperty();
+entries.add(entry);
+Hudson.instance.getGlobalNodeProperties().replaceBy(entries);
 
 // Parse out args into variables
 EnvVars entries = new EnvVars();
