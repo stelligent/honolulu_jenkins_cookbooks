@@ -20,24 +20,19 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //THE SOFTWARE.
 
-import hudson.model.Hudson;
+import jenkins.model.Jenkins;
 
-import hudson.slaves.EnvironmentVariablesNodeProperty;
-import hudson.slaves.EnvironmentVariablesNodeProperty.Entry;
-import hudson.util.DescribableList;
-import hudson.slaves.NodePropertyDescriptor;
-import hudson.slaves.NodeProperty;
-
+import hudson.EnvVars;
 
 // takes in a list of key-value pairs, connected by equals signs and makes them Jenkins variables
 // ie. groovy create_vars.groovy key1=value1 key2=value2 key3=value3
 
-entries = new DescribableList<NodeProperty<?>,NodePropertyDescriptor>();
-
+EnvVars entries = new EnvVars();
 for (arg in args) {
+ println "processing " + arg;
  pair = arg.split('=')
- entry = new EnvironmentVariablesNodeProperty(new Entry(pair[0], pair[1]));
- entries.add(entry)
+ entries.put(pair[0], pair[1])
 }
 
-Hudson.instance.getGlobalNodeProperties().replaceBy(entries);
+Jenkins.instance.getGlobalNodeProperties()[0].getEnvVars().overrideExpandingAll(entries)
+"site-cookbooks/jenkins-configuration/files/default/create_vars.groovy" 50L, 2147C         
