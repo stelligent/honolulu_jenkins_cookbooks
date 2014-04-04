@@ -31,10 +31,14 @@ import hudson.slaves.NodeProperty;
 // takes in a list of key-value pairs, connected by equals signs and makes them Jenkins variables
 // ie. groovy create_vars.groovy key1=value1 key2=value2 key3=value3
 
-// Zero out what was there
 entries = new DescribableList<NodeProperty<?>,NodePropertyDescriptor>();
-entry = new EnvironmentVariablesNodeProperty();
-entries.add(entry);
+
+for (arg in args) {
+ pair = arg.split('=')
+ entry = new EnvironmentVariablesNodeProperty(new Entry(pair[0], pair[1]));
+ entries.add(entry)
+}
+
 Hudson.instance.getGlobalNodeProperties().replaceBy(entries);
 
 // Parse out args into variables
