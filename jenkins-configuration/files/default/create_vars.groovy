@@ -20,7 +20,7 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //THE SOFTWARE.
 
-import jenkins.model.Jenkins;
+import hudson.model.Hudson;
 import hudson.EnvVars;
 import hudson.slaves.EnvironmentVariablesNodeProperty;
 import hudson.slaves.EnvironmentVariablesNodeProperty.Entry;
@@ -31,8 +31,8 @@ import hudson.slaves.NodeProperty;
 // takes in a list of key-value pairs, connected by equals signs and makes them Jenkins variables
 // ie. groovy create_vars.groovy key1=value1 key2=value2 key3=value3
 
-// A new Jenkins will have a null env vars, so set up an empty one to avoid NPEs, or if we get run twice, to clear out existing ones.
-Jenkins.instance.getGlobalNodeProperties().replaceBy(Collections.singleton(new EnvironmentVariablesNodeProperty()));
+// Zero out what was there
+Hudson.instance.getGlobalNodeProperties().replaceBy(Collections.singleton(new EnvironmentVariablesNodeProperty()));
 
 // Parse out args into variables
 EnvVars entries = new EnvVars();
@@ -42,4 +42,4 @@ for (arg in args) {
 }
 
 // Save to Jenkins
-Jenkins.instance.getGlobalNodeProperties()[0].getEnvVars().overrideExpandingAll(entries)
+Hudson.instance.getGlobalNodeProperties()[0].getEnvVars().overrideExpandingAll(entries)
