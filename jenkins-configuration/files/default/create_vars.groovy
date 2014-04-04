@@ -35,4 +35,3 @@ for (arg in args) {
 }
 
 Jenkins.instance.getGlobalNodeProperties()[0].getEnvVars().overrideExpandingAll(entries)
-"site-cookbooks/jenkins-configuration/files/default/create_vars.groovy" 50L, 2147C         
