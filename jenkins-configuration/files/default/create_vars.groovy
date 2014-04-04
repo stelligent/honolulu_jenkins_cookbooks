@@ -34,7 +34,7 @@ import hudson.slaves.NodeProperty;
 // A new Jenkins will have a null env vars, so set up an empty one to avoid NPEs
 entries = new DescribableList<NodeProperty<?>,NodePropertyDescriptor>();
 entries.add(new EnvironmentVariablesNodeProperty());
-Jenkins.getGlobalNodeProperties().replaceBy(entries);
+Jenkins.instance.getGlobalNodeProperties().replaceBy(entries);
 
 // Parse out args into varaibles
 EnvVars entries = new EnvVars();
