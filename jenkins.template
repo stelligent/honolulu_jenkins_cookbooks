@@ -16,6 +16,9 @@
     },
 
     "Resources": {
+        "JenkinsSdbDomain": {
+          "Type" : "AWS::SDB::Domain"
+        },
         "jenkinsstack": {
             "Type": "AWS::OpsWorks::Stack",
             "Properties": {
@@ -57,10 +60,10 @@
                       "pipeline": {
                         "source" : { "Ref" : "repository" },
                         "branch" : { "Ref" : "branch"},
-                        "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage"],
+                        "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage", "build-and-deploy-for-prod", "production-trigger", "smoke-test" ],
                         "global_vars" : { 
                           "region": { "Ref" : "AWS::Region" },
-                          "sdb_domain" : "honolulu-jenkins-jonny-test"
+                          "sdb_domain" : { "Ref" : "JenkinsSdbDomain"}
                           },
                         "users" : [ [ "admin","admin","admin" ] ]
                       },
@@ -158,7 +161,7 @@
                 ],
                 "CustomRecipes": {
                     "Deploy": [
-                        "jenkins::server", "jenkins::proxy", "rvm::user_install", "jenkins-configuration::vars", "jenkins-configuration::jobs", "jenkins-configuration::views", "opsworks_nodejs", "jenkins-configuration::users"
+                        "jenkins::server", "jenkins::proxy", "rvm::user_install", "jenkins-configuration::vars", "jenkins-configuration::vars", "jenkins-configuration::jobs", "jenkins-configuration::views", "opsworks_nodejs", "jenkins-configuration::users"
                     ]
                 }
             }
