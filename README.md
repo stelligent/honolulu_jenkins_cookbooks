@@ -29,11 +29,19 @@ Included in the repository is CloudFormation template that will handle building 
 
     aws cloudformation create-stack --stack-name Honolulu-Jenkins --template-body "`cat jenkins.template`"  --disable-rollback  --timeout-in-minutes 60
 
-If you'd like to specify a github repository other than the Honolulu Answers app, you can pass in a parameter. The URL must be a github repository, and it must be a public repo.
+If you'd like to specify a github repository other than the Honolulu Answers app, you can pass in a parameter. The URL must be a github repository, and it must be a public repo. You can also specify a branch if you need one.
 
     --parameters ParameterKey=repository,ParameterValue=https://github.com/yourgithubrepo.git
+    --parameters ParameterKey=branch,ParameterValue=your_branch_name
 
 If you already have a Jenkins server running that this is supposed to replace, you can use the bluegreen job to update the Route 53 information to have it point to the new server. All job history will be lost.
+
+**Note**: Jenkins doesn't really let you insert environment variables as part of the setup process. We have a hack implemented now that populates all the variables, but they are not shown on the Global Configuration screen. It will only show one of them. Further, if you make any changes to the Global Configuration (variables or otherwise), it will only save the variable that was displayed. 
+
+If you need to make a change to the global configuration, make sure you set these variables:
+
+* **sdb_domain** needs to be the name of the SDB domain created as part of the CFN stack.
+* **region** needs to be the name of the region you're operating in.
 
 how to update jenkins configuration:
 ====
