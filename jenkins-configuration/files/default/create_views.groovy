@@ -49,11 +49,13 @@ def addView(title, view) {
     println "The view ${title} already exists, not adding again";
   }
 }
-INITIAL_JOB = "trigger-stage";
+
+
+// This creates a view using the pipeline plugin
 pipelineViewName = "Continuous Delivery Pipeline";
 pipelineView = new BuildPipelineView(pipelineViewName,
                                      pipelineViewName,
-                                     new DownstreamProjectGridBuilder(INITIAL_JOB),
+                                     new DownstreamProjectGridBuilder("trigger-stage"),
                                      "5",    //final String noOfDisplayedBuilds,
                                      true,   //final boolean triggerOnlyLatestJob, 
                                      null);  //final String cssUrl
@@ -61,12 +63,18 @@ pipelineView = new BuildPipelineView(pipelineViewName,
 addView(pipelineViewName, pipelineView);
 
 
+// This creates a view of the automatic pipeline using the Deployment Pipeline Plugin
 List<DeliveryPipelineView.ComponentSpec> componentSpecs = new ArrayList<DeliveryPipelineView.ComponentSpec>();
 componentSpecs.add(new DeliveryPipelineView.ComponentSpec("Delivery Pipeline", "trigger-stage"));
-
 DeliveryPipelineView view = new DeliveryPipelineView("Delivery Pipeline View");
 view.setComponentSpecs(componentSpecs);
-
 addView("Delivery Pipeline View", view);
+
+// This creates a view of the production deployment pipeline using the Deployment Pipeline Plugin
+List<DeliveryPipelineView.ComponentSpec> componentSpecs = new ArrayList<DeliveryPipelineView.ComponentSpec>();
+componentSpecs.add(new DeliveryPipelineView.ComponentSpec("Delivery Pipeline", "production-trigger"));
+DeliveryPipelineView view = new DeliveryPipelineView("Production Deployment Pipeline View");
+view.setComponentSpecs(componentSpecs);
+addView("Production Deployment Pipeline View", view);
 
 Hudson.instance.save();
