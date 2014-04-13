@@ -64,17 +64,17 @@ addView(pipelineViewName, pipelineView);
 
 
 // This creates a view of the automatic pipeline using the Deployment Pipeline Plugin
-List<DeliveryPipelineView.ComponentSpec> componentSpecs = new ArrayList<DeliveryPipelineView.ComponentSpec>();
-componentSpecs.add(new DeliveryPipelineView.ComponentSpec("Delivery Pipeline", "trigger-stage"));
-DeliveryPipelineView view = new DeliveryPipelineView("Delivery Pipeline View");
-view.setComponentSpecs(componentSpecs);
-addView("Delivery Pipeline View", view);
+List<DeliveryPipelineView.ComponentSpec> pipeline_componentSpecs = new ArrayList<DeliveryPipelineView.ComponentSpec>();
+pipeline_componentSpecs.add(new DeliveryPipelineView.ComponentSpec("Delivery Pipeline", "trigger-stage"));
+DeliveryPipelineView pipeline_view = new DeliveryPipelineView("Delivery Pipeline View");
+pipeline_view.setComponentSpecs(pipeline_componentSpecs);
+addView("Delivery Pipeline View", pipeline_view);
 
 // This creates a view of the production deployment pipeline using the Deployment Pipeline Plugin
-List<DeliveryPipelineView.ComponentSpec> componentSpecs = new ArrayList<DeliveryPipelineView.ComponentSpec>();
-componentSpecs.add(new DeliveryPipelineView.ComponentSpec("Delivery Pipeline", "production-trigger"));
-DeliveryPipelineView view = new DeliveryPipelineView("Production Deployment Pipeline View");
-view.setComponentSpecs(componentSpecs);
-addView("Production Deployment Pipeline View", view);
+List<DeliveryPipelineView.ComponentSpec> production_componentSpecs = new ArrayList<DeliveryPipelineView.ComponentSpec>();
+production_componentSpecs.add(new DeliveryPipelineView.ComponentSpec("Delivery Pipeline", "production-trigger"));
+DeliveryPipelineView production_view = new DeliveryPipelineView("Production Deployment Pipeline View");
+production_view.setComponentSpecs(production_componentSpecs);
+addView("Production Deployment Pipeline View", production_view);
 
 Hudson.instance.save();
