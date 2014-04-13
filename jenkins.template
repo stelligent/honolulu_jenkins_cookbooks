@@ -60,7 +60,7 @@
                       "pipeline": {
                         "source" : { "Ref" : "repository" },
                         "branch" : { "Ref" : "branch"},
-                        "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage", "build-and-deploy-for-prod", "production-trigger", "smoke-test" ],
+                        "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage", "build-and-deploy-for-prod", "production-trigger", "smoke-test", "clean-gemset" ],
                         "global_vars" : { 
                           "region": { "Ref" : "AWS::Region" },
                           "sdb_domain" : { "Ref" : "JenkinsSdbDomain"}
