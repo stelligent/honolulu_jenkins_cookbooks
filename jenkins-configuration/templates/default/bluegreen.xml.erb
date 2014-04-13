@@ -70,5 +70,14 @@
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
-  <buildWrappers/>
+  <buildWrappers>
+    <ruby-proxy-object>
+      <ruby-object ruby-class="Jenkins::Plugin::Proxies::BuildWrapper" pluginid="rvm">
+        <object ruby-class="RvmWrapper" pluginid="rvm">
+          <impl pluginid="rvm" ruby-class="String">1.9.3</impl>
+        </object>
+        <pluginid pluginid="rvm" ruby-class="String">rvm</pluginid>
+      </ruby-object>
+    </ruby-proxy-object>
+  </buildWrappers>
 </project>
