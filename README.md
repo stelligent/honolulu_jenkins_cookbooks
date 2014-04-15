@@ -42,6 +42,7 @@ If you need to make a change to the global configuration, make sure you set thes
 
 * **sdb_domain** needs to be the name of the SDB domain created as part of the CFN stack.
 * **region** needs to be the name of the region you're operating in.
+* **domain** needs to be the name of the hosted zone that the blue green script should use to set up. For example, we host ours at honolulu.stelligent.com, so we set this to stelligent.com.
 
 how to update jenkins configuration:
 ====
