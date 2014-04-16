@@ -25,13 +25,21 @@ jenkins_url = "http://localhost:8080"
 
 global_vars = node["pipeline"]["global_vars"].collect { |k,v| "#{k}=#{v} "}.join
 
-cookbook_file "script to add Jenkins global variables" do
-  source "create_vars.groovy"
-  path "/tmp/create_vars.groovy"
-end
+# cookbook_file "script to add Jenkins global variables" do
+#   source "create_vars.groovy"
+#   path "/tmp/create_vars.groovy"
+# end
 
-jenkins_cli "add global variables" do
-  Chef::Log.info "adding vars #{global_vars}"
-  url jenkins_url
-  command "groovy /tmp/create_vars.groovy #{global_vars}"
+# jenkins_cli "add global variables" do
+#   Chef::Log.info "adding vars #{global_vars}"
+#   url jenkins_url
+#   command "groovy /tmp/create_vars.groovy #{global_vars}"
+# end
+
+node["pipeline"]["global_vars"].each do |key, value|
+
+  magic_shell_environment "#{key}" do
+    value "#{value}"
+  end
+
 end
