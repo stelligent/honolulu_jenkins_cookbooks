@@ -1,7 +1,9 @@
-# Cookbook Name:: firefox
-# Recipe:: default
 #
-# Copyright 2012, Webtrends, Inc.
+# Author:: Timothy Smith (<tsmith@llnw.com>)
+# Cookbook Name:: firefox
+# Attribute:: default
+#
+# Copyright:: Copyright (c) 2012 Webtrends Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,14 +16,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-if platform?('windows')
-  windows_package 'Mozilla Firefox 25.0.1 (x86 en-US)' do
-    source node['firefox']['http_url']
-    installer_type :custom
-    options '-ms'
-    action :install
-  end
-else
-  Chef::Log.warn('Firefox can only be installed on the Windows platform using this cookbook.')
-end
+default['firefox']['http_url'] = 'http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/25.0.1/win32/en-US/Firefox%20Setup%2025.0.1.exe'
