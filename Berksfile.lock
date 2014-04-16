@@ -12,6 +12,9 @@
     "firefox": {
       "locked_version": "1.0.7"
     },
+    "magic_shell": {
+      "locked_version": "1.0.0"
+    },
     "java": {
       "locked_version": "1.15.4"
     },
