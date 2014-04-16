@@ -165,7 +165,7 @@
                 ],
                 "CustomRecipes": {
                     "Deploy": [
-                        "jenkins::server", "jenkins::proxy", "rvm::user_install", "jenkins-configuration::vars", "jenkins-configuration::vars", "jenkins-configuration::jobs", "jenkins-configuration::views", "opsworks_nodejs", "jenkins-configuration::users"
+                        "jenkins-configuration::vars", "jenkins::server", "jenkins::proxy", "rvm::user_install", "jenkins-configuration::vars", "jenkins-configuration::jobs", "jenkins-configuration::views", "opsworks_nodejs", "jenkins-configuration::users"
                     ]
                 }
             }
