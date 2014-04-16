@@ -22,6 +22,10 @@
         "jenkinsstack": {
             "Type": "AWS::OpsWorks::Stack",
             "Properties": {
+                "ConfigurationManager" : {
+                  "Name" : "Chef",
+                  "Version" : "11.10"
+                },
                 "Name": {
                     "Ref": "AWS::StackName"
                 },
