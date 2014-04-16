@@ -1,4 +1,4 @@
-jenkins_chef_cookbooks
+honolulu_jenkins_cookbooks
 ======================
 
 A collection of cookbooks and configuration used to set up a Jenkins server for the Honolulu application. You can point to this repo with OpsWorks if you want to create a custom Jenkins layer.
@@ -40,7 +40,7 @@ If you already have a Jenkins server running that this is supposed to replace, y
 
 If you need to make a change to the global configuration, make sure you set these variables:
 
-* **sdb_domain** needs to be the name of the SDB domain created as part of the CFN stack.
+* **sdb_domain** needs to be the name of the SDB domain created as part of the CFN stack. (You can get this by going to the AWS CloudFormation console, selecting the stack, and going to the "Resources" tab.)
 * **region** needs to be the name of the region you're operating in.
 * **domain** needs to be the name of the hosted zone that the blue green script should use to set up. For example, we host ours at honolulu.stelligent.com, so we set this to stelligent.com.
 
