@@ -25,24 +25,16 @@ how to use this repository
 
 This repository is design to be used as the custom Chef cookbooks repository for a Jenkins stack built using Amazon's OpsWorks service. I suppose you could use it to build a custom Jenkins server without using OpsWorks, but I haven't tried that so if you give it a shot you're on your own. :)
 
-Included in the repository is CloudFormation template that will handle building the appropriate IAM roles and OpsWorks stack. To run it, you will need the [AWS CLI tool installed and configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html). Then, just pull down the repo andrun this command:
+Included in the repository is CloudFormation template that will handle building the appropriate IAM roles and OpsWorks stack. To run it, you will need the [AWS CLI tool installed and configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html). Then, just pull down the repo and run this command:
 
-    aws cloudformation create-stack --stack-name Honolulu-Jenkins --template-body "`cat jenkins.template`"  --disable-rollback  --timeout-in-minutes 60
+    aws cloudformation create-stack --stack-name Honolulu-Jenkins --template-body "`cat jenkins.template`"  --disable-rollback  --timeout-in-minutes 60 --parameters ParameterKey=domain,ParameterValue="yourdomain.com"
+
+The template supports three parameters: _domain_, _repository_, and _branch_. The only required one is _domain_, which is Route 53 Hosted zone you already have set up. You don't _need_ this, but without it the jobs that manipulate Route 53 entries will fail. 
 
 If you'd like to specify a github repository other than the Honolulu Answers app, you can pass in a parameter. The URL must be a github repository, and it must be a public repo. You can also specify a branch if you need one.
 
     --parameters ParameterKey=repository,ParameterValue=https://github.com/yourgithubrepo.git
     --parameters ParameterKey=branch,ParameterValue=your_branch_name
-
-If you already have a Jenkins server running that this is supposed to replace, you can use the bluegreen job to update the Route 53 information to have it point to the new server. All job history will be lost.
-
-**Note**: Jenkins doesn't really let you insert environment variables as part of the setup process. We have a hack implemented now that populates all the variables, but they are not shown on the Global Configuration screen. It will only show one of them. Further, if you make any changes to the Global Configuration (variables or otherwise), it will only save the variable that was displayed. 
-
-If you need to make a change to the global configuration, make sure you set these variables:
-
-* **sdb_domain** needs to be the name of the SDB domain created as part of the CFN stack. (You can get this by going to the AWS CloudFormation console, selecting the stack, and going to the "Resources" tab. Use the *Physical Id* value for the *Logical Id* named ```JenkinsSdbDomain```
-* **region** needs to be the name of the region you're operating in. For a list of valid region codes, see [Regions and Endpoints](http://docs.aws.amazon.com/general/latest/gr/rande.html)
-* **domain** needs to be the name of the hosted zone that the blue green script should use to set up. For example, we host ours at honolulu.stelligent.com, so we set this to stelligent.com.
 
 how to update jenkins configuration:
 ====
@@ -60,7 +52,7 @@ The templates don't do much templating (only the source control repo URL) so you
     
 If you like what you see, you can commit the changes.
 
-**Note**: The groovy scripts that inject the job configuration will crash and burn if there is any whitespace at the beginning of the file. Make sure that there isn't any whitespace at the beginning of the XML document. 
+**Note**: The groovy scripts that inject the job configuration will crash and burn if there is any whitespace at the beginning of the file. Make sure that there isn't any whitespace at the beginning of the the XML configuration file. 
 
 questions?
 ====
