@@ -30,9 +30,10 @@ node["pipeline"]["global_vars"].each do |key, value|
 
 end
 
-bash 'setup git for jenkins user' do
+bash 'setup profile.d for jenkins user' do
   code <<-END
-    echo # jenkins doesn't run in a login shell, so we need to force it to load the profile.d entries, which is where magic shell does its magic.
+    echo >> /etc/sysconfig/jenkins
+    echo \# jenkins does not run in a login shell, so we need to force it to load the profile.d entries, which is where magic shell does its magic. >> /etc/sysconfig/jenkins
     echo source /etc/profile >> /etc/sysconfig/jenkins
   END
 end
