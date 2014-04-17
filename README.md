@@ -35,6 +35,14 @@ If you'd like to specify a github repository other than the Honolulu Answers app
 
     --parameters ParameterKey=repository,ParameterValue=https://github.com/yourgithubrepo.git
     --parameters ParameterKey=branch,ParameterValue=your_branch_name
+    
+**Note**: When your Jenkins server comes up, it will have security turned on. The username / password will be admin / admin, though you'll likely want to change that.
+
+* Log in to Jenkins as admin
+* Click the "People" link on the right
+* Click the "admin" link
+* Click "configure"
+* Punch in your new password in the password fields and click save.
 
 how to update jenkins configuration:
 ====
