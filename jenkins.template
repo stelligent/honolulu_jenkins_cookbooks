@@ -11,6 +11,10 @@
         "Type" : "String",
         "Default" : "master",
         "Description" : "The git branch of the repository you'd like Jenkins to be configured to look at."
+      },
+      "domain" : {
+        "Type" : "String",
+        "Description" : "The Route 53 Hosted Zone to look for resource records. For example, if you want the Jenkins server to populate 'appdemo.stelligent.com', the entry for this field should be 'stelligent.com'"
       }
 
     },
@@ -67,7 +71,9 @@
                         "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage", "build-and-deploy-for-prod", "production-trigger", "smoke-test", "clean-gemset", "become-production-jenkins", "create-new-jenkins"],
                         "global_vars" : { 
                           "region": { "Ref" : "AWS::Region" },
-                          "sdb_domain" : { "Ref" : "JenkinsSdbDomain" }
+                          "sdb_domain" : { "Ref" : "JenkinsSdbDomain" },
+                          "domain" : { "Ref" : "domain" },
+                          "name_of_jenkins_stack" : { "Ref" : "AWS::StackName"}
                           },
                         "users" : [ [ "admin","admin","admin" ] ]
                       },
@@ -133,7 +139,6 @@
                       }
                   },
             "DefaultOs": "Amazon Linux",
-            "DefaultAvailabilityZone": "us-west-2c",
             "UseCustomCookbooks": true,
             "CustomCookbooksSource": {
                 "Type": "git",
