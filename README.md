@@ -62,6 +62,20 @@ If you like what you see, you can commit the changes.
 
 **Note**: The groovy scripts that inject the job configuration will crash and burn if there is any whitespace at the beginning of the file. Make sure that there isn't any whitespace at the beginning of the the XML configuration file. 
 
+how to push a new version of jenkins out to the world
+====
+
+Most of the job knowledge is stored in scripts that are stored in the application repository, but if you create or delete jobs, or make configuration changes to the jobs (...which really shouldn't be necessary!) you may need to push a new Jenkins out to the world.
+
+You have two options: you can manually run the CloudFormation script as detailed above, or there are two Jenkins jobs you can run to update the Jenkins server.
+
+The two jobs in question are:
+
+* **create-new-jenkins**: this job will kick off the create-new-jenkins.sh, which should contain a script that runs the cloudformation script. You can probably just steal [the one we wrote for over here.](https://github.com/stelligent/honolulu_answers/blob/master/infrastructure/create-new-jenkins.sh)
+* **become-production-jenkins**: this job will call the script to change the Route 53 entry for your pipeline resource record. Changing Route 53 entries is a huge pain, so maybe you would like to steal [the ruby script we wrote exactly for that purpose](https://github.com/stelligent/honolulu_answers/blob/master/infrastructure/bin/route53switch.rb)?
+
+Then, when you need a new Jenkins, just run the create-new-jenkins job. Once it completes, go into the OpsWorks console to find your new stack, open it up, and then run the become-production-jenkins job on that server and it'll become the new production instance.
+
 questions?
 ====
 If you have any issues, feel free to open an issue or make a pull request. Alternatively, you can reach out on twitter: @jonathansywulak
