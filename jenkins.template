@@ -75,7 +75,11 @@
                           "domain" : { "Ref" : "domain" },
                           "name_of_jenkins_stack" : { "Ref" : "AWS::StackName"}
                           },
-                        "users" : [ [ "admin","admin","admin" ] ]
+                        "users" : [ [ "admin","admin","admin" ] ],
+                        "email" : {
+                          "username" : { "Ref": "EmailUser" },
+                          "password" : { "Fn::GetAtt": [ "EmailUserKeys", "SecretAccessKey" ] }
+                        }
                       },
 
                       "jenkins": {
@@ -304,14 +308,6 @@
             "Value": {
                 "Ref": "jenkinsstack"
             }
-        },
-        "EmailUsername" : {
-          "Value" : {
-            "Ref": "EmailUser"
-          }
-        },
-        "EmailPassword" : {
-          "Value" : { "Fn::GetAtt": ["EmailUserKeys", "SecretAccessKey"] }
         }
     }
 }
