@@ -27,11 +27,11 @@ template "/var/lib/jenkins/hudson.plugins.emailext.ExtendedEmailPublisher.xml" d
       { 
         :domain         => node["pipeline"]["global_vars"]["domain"],
         :jenkins_url    => "pipelinedemo.#{node['pipeline']['global_vars']['domain']}",
-        :email_username => node["email"]["username"],
-        :email_password => node["email"]["password"],
-        :email_address  => node["email"]["admin_email_address"],
-        :smtp_server    => node["email"]["stmp_server"],
-        :smtp_port      => node["email"]["stmp_port"],
+        :email_username => node["pipeline"]["email"]["username"],
+        :email_password => node["pipeline"]["email"]["password"],
+        :email_address  => node["pipeline"]["email"]["admin_email_address"],
+        :smtp_server    => node["pipeline"]["email"]["stmp_server"],
+        :smtp_port      => node["pipeline"]["email"]["stmp_port"],
       }
     )
 end
