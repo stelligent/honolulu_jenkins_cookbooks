@@ -24,5 +24,5 @@ default[:jenkins_git][:username] = 'jenkins'
 default[:jenkins_git][:email] = 'jenkins@somejenkins.com'
 
 default[:jenkins][:cert_subject] ='/CN=www.somebody.com/O=someorg/C=US/ST=MD/L=somecity'
-default["email"]["stmp_server"] = "email-smtp.us-east-1.amazonaws.com"
-default["email"]["stmp_port"]   = "587"
+default["pipeline"]["email"]["stmp_server"] = "email-smtp.us-east-1.amazonaws.com"
+default["pipeline"]["email"]["stmp_port"]   = "587"
