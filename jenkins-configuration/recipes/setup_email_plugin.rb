@@ -26,7 +26,7 @@ template "/var/lib/jenkins/hudson.plugins.emailext.ExtendedEmailPublisher.xml" d
     variables(
       { 
         :domain         => node["pipeline"]["global_vars"]["domain"],
-        :jenkins_url    => "pipelinedemo.#{node["global_vars"]["domain"]}",
+        :jenkins_url    => "pipelinedemo.#{node['pipeline']['global_vars']['domain']}",
         :email_username => node["email"]["username"],
         :email_password => node["email"]["password"],
         :email_address  => node["email"]["admin_email_address"],
@@ -35,5 +35,3 @@ template "/var/lib/jenkins/hudson.plugins.emailext.ExtendedEmailPublisher.xml" d
       }
     )
 end
-
-
