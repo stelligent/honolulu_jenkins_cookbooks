@@ -274,6 +274,29 @@
                     }
                 ]
             }
+        },
+        "EmailUser" : {
+          "Type" : "AWS::IAM::User"
+        },
+        "EmailUserPolicy" : {
+          "Type" : "AWS::IAM::Policy",
+          "Properties" : {
+            "PolicyName" : "EmailUser",
+            "PolicyDocument" : {
+              "Statement": [{
+                "Effect": "Allow",
+                "Action": "ses:SendRawEmail",
+                "Resource": "*"
+              }]
+            },
+            "Users" : [{ "Ref" : "EmailUser" }]
+          }
+        },
+         "EmailUserKeys": {
+            "Type": "AWS::IAM::AccessKey",
+            "Properties": {
+                "UserName": { "Ref": "EmailUser" }
+            }
         }
     },
     "Outputs": {
@@ -281,6 +304,14 @@
             "Value": {
                 "Ref": "jenkinsstack"
             }
+        },
+        "EmailUsername" : {
+          "Value" : {
+            "Ref": "EmailUser"
+          }
+        },
+        "EmailPassword" : {
+          "Value" : { "Fn::GetAtt": ["EmailUserKeys", "SecretAccessKey"] }
         }
     }
 }
