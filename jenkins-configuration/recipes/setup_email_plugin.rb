@@ -20,18 +20,31 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
+template "/etc/sysconfig/jenkins" do
+  owner "root"
+  group "root"
+  source "jenkins.erb"
+end
+
+# we probably do this somewhere else in this cookbook, but just in case, we restart here so changes take effect
+service "jenkins" do
+  action :restart
+end
+
 template "/var/lib/jenkins/hudson.plugins.emailext.ExtendedEmailPublisher.xml" do
   source "hudson.plugins.emailext.ExtendedEmailPublisher.xml.erb"
-
-    variables(
-      { 
-        :domain         => node["pipeline"]["global_vars"]["domain"],
-        :jenkins_url    => "pipelinedemo.#{node['pipeline']['global_vars']['domain']}",
-        :email_username => node["pipeline"]["email"]["username"],
-        :email_password => node["pipeline"]["email"]["password"],
-        :email_address  => node["pipeline"]["email"]["admin_email_address"],
-        :smtp_server    => node["pipeline"]["email"]["stmp_server"],
-        :smtp_port      => node["pipeline"]["email"]["stmp_port"],
-      }
-    )
+  mode 0644
+  owner "jenkins"
+  group "jenkins"
+  variables(
+    { 
+      :domain         => node["pipeline"]["global_vars"]["domain"],
+      :jenkins_url    => "pipelinedemo.#{node['pipeline']['global_vars']['domain']}",
+      :email_username => node["pipeline"]["email"]["username"],
+      :email_password => node["pipeline"]["email"]["password"],
+      :email_address  => node["pipeline"]["email"]["admin_email_address"],
+      :smtp_server    => node["pipeline"]["email"]["stmp_server"],
+      :smtp_port      => node["pipeline"]["email"]["stmp_port"],
+    }
+  )
 end
