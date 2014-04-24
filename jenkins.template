@@ -15,6 +15,10 @@
       "domain" : {
         "Type" : "String",
         "Description" : "The Route 53 Hosted Zone to look for resource records. For example, if you want the Jenkins server to populate 'appdemo.stelligent.com', the entry for this field should be 'stelligent.com'"
+      },
+      "adminEmailAddress" : {
+        "Type" : "String",
+        "Description" : "The address that Jenkins failure notices should come from."
       }
 
     },
@@ -79,7 +83,7 @@
                         "email" : {
                           "username" : { "Ref": "EmailUserKeys" },
                           "secret_key" : { "Fn::GetAtt": [ "EmailUserKeys", "SecretAccessKey" ] },
-                          "admin_email_address" : "jonny@stelligent.com"
+                          "admin_email_address" : { "Ref" : "adminEmailAddress"}
                         }
                       },
 
