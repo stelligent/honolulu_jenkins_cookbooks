@@ -20,6 +20,22 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
+# lifted from http://blog.open-tribute.org/2013/09/how-to-get-your-ses-smtp-password-from.html
+require 'openssl'
+require 'base64'
+
+sha256 = OpenSSL::Digest::Digest.new('sha256')
+secret_key = node["pipeline"]["email"]["secret_key"]
+message = "SendRawEmail" # needs to be the string SendRawEmail
+version = "\x02" # needs to be 0x2
+
+signature = OpenSSL::HMAC.digest(sha256, secret_key, message)
+verSignature = version + signature
+
+smtp_password = Base64.encode64(verSignature)
+
+
+
 template "/etc/sysconfig/jenkins" do
   owner "root"
   group "root"
@@ -41,10 +57,10 @@ template "/var/lib/jenkins/hudson.plugins.emailext.ExtendedEmailPublisher.xml" d
       :domain         => node["pipeline"]["global_vars"]["domain"],
       :jenkins_url    => "pipelinedemo.#{node['pipeline']['global_vars']['domain']}",
       :email_username => node["pipeline"]["email"]["username"],
-      :email_password => node["pipeline"]["email"]["password"],
+      :email_password => smtp_password,
       :email_address  => node["pipeline"]["email"]["admin_email_address"],
       :smtp_server    => node["pipeline"]["email"]["stmp_server"],
-      :smtp_port      => node["pipeline"]["email"]["stmp_port"],
+      :smtp_port      => node["pipeline"]["email"]["stmp_port"]
     }
   )
 end
