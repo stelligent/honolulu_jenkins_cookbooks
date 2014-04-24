@@ -77,8 +77,9 @@
                           },
                         "users" : [ [ "admin","admin","admin" ] ],
                         "email" : {
-                          "username" : { "Ref": "EmailUser" },
-                          "password" : { "Fn::GetAtt": [ "EmailUserKeys", "SecretAccessKey" ] }
+                          "username" : { "Ref": "EmailUserKeys" },
+                          "secret_key" : { "Fn::GetAtt": [ "EmailUserKeys", "SecretAccessKey" ] },
+                          "admin_email_address" : "jonny@stelligent.com"
                         }
                       },
 
@@ -174,7 +175,7 @@
                 ],
                 "CustomRecipes": {
                     "Deploy": [
-                        "jenkins::server", "jenkins-configuration::vars", "jenkins::proxy", "rvm::user_install", "jenkins-configuration::jobs", "jenkins-configuration::views", "opsworks_nodejs", "jenkins-configuration::users"
+                        "jenkins::server", "jenkins-configuration::vars", "jenkins::proxy", "rvm::user_install", "jenkins-configuration::jobs", "jenkins-configuration::views", "jenkins-configuration::setup_email_plugin", "opsworks_nodejs", "jenkins-configuration::users"
                     ]
                 }
             }
