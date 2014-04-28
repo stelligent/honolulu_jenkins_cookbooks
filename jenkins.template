@@ -72,7 +72,7 @@
                       "pipeline": {
                         "source" : { "Ref" : "repository" },
                         "branch" : { "Ref" : "branch"},
-                        "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage", "build-and-deploy-for-prod", "production-trigger", "smoke-test", "clean-gemset", "become-production-jenkins", "create-new-jenkins"],
+                        "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage", "build-and-deploy-for-prod", "production-trigger", "smoke-test", "clean-gemset", "become-production-jenkins", "create-new-jenkins", "job-seed"],
                         "global_vars" : { 
                           "region": { "Ref" : "AWS::Region" },
                           "sdb_domain" : { "Ref" : "JenkinsSdbDomain" },
@@ -119,6 +119,7 @@
                                      { "name" : "htmlpublisher",                 "version" : "1.2"     },
                                      { "name" : "ivytrigger",                    "version" : "0.26"    },
                                      { "name" : "jenkins-cloudformation-plugin", "version" : "0.11"    },
+                                     { "name" : "job-dsl" ,                      "version" : "1.22"    },
                                      { "name" : "job-exporter" ,                 "version" : "0.4"     },
                                      { "name" : "jquery",                        "version" : "1.7.2-1" },
                                      { "name" : "log-parser",                    "version" : "1.0.8"   },
