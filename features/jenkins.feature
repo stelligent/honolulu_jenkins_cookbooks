@@ -37,11 +37,9 @@ Feature: Scripted install of Jenkins
         When I run "ls /var/lib/jenkins/jobs"
         Then I should see <jobname>
         Examples: 
-            | jobname                 |
-            | "commit-stage"          |
-            | "bluegreen"             |
-            | "build-and-deploy"      |
-            | "jenkins-test"          |
-            | "terminate-environment" |
-            | "test-application"      |
-            | "trigger-stage"         |
+            | jobname                     |
+            | "jenkins-test"              |
+            | "become-production-jenkins" |
+            | "clean-gemset"              |
+            | "create-new-jenkins"        |
+            | "job-seed"                  |
