@@ -52,6 +52,13 @@
   <triggers/>
   <concurrentBuild>false</concurrentBuild>
   <builders>
+    <hudson.tasks.Shell>
+      <command># do this stuff first, since once the trigger job exists, it&apos;s going to try to run
+# when it runs it&apos;s going to try to do a bundle install, and these two jobs will step on each other&apos;s feet
+gem install bundler
+bundle install 
+</command>
+    </hudson.tasks.Shell>
     <javaposse.jobdsl.plugin.ExecuteDslScripts plugin="job-dsl@1.22">
       <targets>pipeline/jobs/jobdsl.groovy</targets>
       <usingScriptText>false</usingScriptText>
@@ -62,8 +69,6 @@
       <command>export host=&quot;localhost&quot;
 export user=&quot;ec2-user&quot;
 
-gem install bundler
-bundle install 
 
 bundle exec cucumber --color \
          --format json \
@@ -72,17 +77,25 @@ bundle exec cucumber --color \
 </command>
     </hudson.tasks.Shell>
   </builders>
-  <publishers/>
+  <publishers>
+    <net.masterthought.jenkins.CucumberReportPublisher plugin="cucumber-reports@0.0.21">
+      <jsonReportDirectory></jsonReportDirectory>
+      <pluginUrlPath></pluginUrlPath>
+      <skippedFails>false</skippedFails>
+      <undefinedFails>false</undefinedFails>
+      <noFlashCharts>false</noFlashCharts>
+    </net.masterthought.jenkins.CucumberReportPublisher>
+  </publishers>
   <buildWrappers>
     <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.3.1">
       <colorMapName>xterm</colorMapName>
     </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
     <ruby-proxy-object>
       <ruby-object ruby-class="Jenkins::Plugin::Proxies::BuildWrapper" pluginid="rvm">
+        <pluginid pluginid="rvm" ruby-class="String">rvm</pluginid>
         <object ruby-class="RvmWrapper" pluginid="rvm">
           <impl pluginid="rvm" ruby-class="String">1.9.3</impl>
         </object>
-        <pluginid pluginid="rvm" ruby-class="String">rvm</pluginid>
       </ruby-object>
     </ruby-proxy-object>
   </buildWrappers>
