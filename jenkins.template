@@ -72,7 +72,7 @@
                       "pipeline": {
                         "source" : { "Ref" : "repository" },
                         "branch" : { "Ref" : "branch"},
-                        "jobs" : [ "commit-stage","bluegreen", "build-and-deploy", "jenkins-test", "terminate-environment", "test-application", "trigger-stage", "build-and-deploy-for-prod", "production-trigger", "smoke-test", "clean-gemset", "become-production-jenkins", "create-new-jenkins", "job-seed"],
+                        "jobs" : [ "jenkins-test", "clean-gemset", "become-production-jenkins", "create-new-jenkins", "job-seed"],
                         "global_vars" : { 
                           "region": { "Ref" : "AWS::Region" },
                           "sdb_domain" : { "Ref" : "JenkinsSdbDomain" },
@@ -180,7 +180,7 @@
                 ],
                 "CustomRecipes": {
                     "Deploy": [
-                        "jenkins::server", "jenkins-configuration::vars", "jenkins::proxy", "rvm::user_install", "jenkins-configuration::jobs", "jenkins-configuration::views", "jenkins-configuration::setup_email_plugin", "opsworks_nodejs", "jenkins-configuration::users"
+                        "jenkins::server", "jenkins-configuration::vars", "jenkins::proxy", "rvm::user_install", "jenkins-configuration::jobs", "jenkins-configuration::setup_email_plugin", "opsworks_nodejs", "jenkins-configuration::users"
                     ]
                 }
             }
