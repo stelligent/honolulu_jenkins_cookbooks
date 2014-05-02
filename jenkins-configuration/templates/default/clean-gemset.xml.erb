@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description></description>
+  <description>Sometimes the gemset that the pipeline uses will get corrupted. (This usually happens when two jobs try to run a `bundle install` at the same time.) This job clears out the gemset so that it can be repopulated.</description>
   <keepDependencies>false</keepDependencies>
   <properties>
     <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.21">
