@@ -50,25 +50,6 @@
                     ]
                 },
                 "CustomJson": { 
-                      "rvm": {
-                          "user_installs": [
-                              {
-                                  "user": "jenkins"
-                              }
-                          ],
-                          "version": "1.22.19",
-                          "user_home_root": "/var/lib",
-                          "global_gems": [
-                              {
-                                  "name": "trollop",
-                                  "version": "2.0"
-                              },
-                              {
-                                  "name": "aws-sdk-core",
-                                  "version": "2.0.0.rc2"
-                              }
-                          ]
-                      },
                       "pipeline": {
                         "source" : { "Ref" : "repository" },
                         "branch" : { "Ref" : "branch"},
@@ -180,7 +161,7 @@
                 ],
                 "CustomRecipes": {
                     "Deploy": [
-                        "jenkins::server", "jenkins-configuration::vars", "jenkins::proxy", "rvm::user_install", "jenkins-configuration::jobs", "jenkins-configuration::setup_email_plugin", "opsworks_nodejs", "jenkins-configuration::users"
+                        "jenkins::server", "jenkins-configuration::vars", "jenkins::proxy", "jenkins-configuration::jobs", "jenkins-configuration::setup_email_plugin", "opsworks_nodejs", "jenkins-configuration::users"
                     ]
                 }
             }
