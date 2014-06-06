@@ -350,7 +350,7 @@
           "Type" : "AWS::CloudFormation::WaitCondition",
           "Properties" : {
             "Handle" : { "Ref" : "BastionWaitHandle" },
-            "Timeout" : "3600"
+            "Timeout" : "900"
             }
         }
     }
