@@ -254,12 +254,13 @@
                             "",
                             [
                                 "#!/bin/bash -e\n",
-                                "cat > /tmp/setup.bsh << SETUP\n",
+                                "echo executing script\n",
                                 "instanceid=`wget -q -O - http://169.254.169.254/latest/meta-data/instance-id`\n",
+                                "echo instance id is: $instanceid\n",
                                 "aws ec2 associate-address --region ", {"Ref": "AWS::Region"}, " --allocation-id ", { "Fn::GetAtt": ["BastionIP", "AllocationId"] } ," --instance-id \\$instanceid\n",
+                                "echo associated eip\n",
                                 "cfn-signal -e $? \"", { "Ref" : "BastionWaitHandle" },"\"\n",
-                                "SETUP\n",
-                                "time . /tmp/setup.bsh\n"
+                                "echo signaled cfn\n"
                             ]
                         ]
                     }
