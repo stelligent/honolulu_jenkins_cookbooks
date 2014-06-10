@@ -414,6 +414,14 @@
                     },
                     {
                         "IpProtocol": "tcp",
+                        "FromPort": "8080",
+                        "ToPort": "8080",
+                        "SourceSecurityGroupId": {
+                            "Ref": "ELBSecurityGroup"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
                         "FromPort": "9418",
                         "ToPort": "9418",
                         "SourceSecurityGroupId": {
@@ -438,6 +446,12 @@
                         "IpProtocol": "tcp",
                         "FromPort": "443",
                         "ToPort": "443",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "8080",
+                        "ToPort": "8080",
                         "CidrIp": "0.0.0.0/0"
                     },
                     {
