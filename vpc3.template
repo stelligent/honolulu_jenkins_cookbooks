@@ -63,7 +63,7 @@
                 },
                 "Tags": [
                     {
-                        "Key": "Application",
+                        "Key": "StackName",
                         "Value": {
                             "Ref": "AWS::StackName"
                         }
@@ -138,7 +138,7 @@
                 },
                 "Tags": [
                     {
-                        "Key": "Application",
+                        "Key": "StackName",
                         "Value": {
                             "Ref": "AWS::StackName"
                         }
@@ -182,7 +182,7 @@
                 },
                 "Tags": [
                     {
-                        "Key": "Application",
+                        "Key": "StackName",
                         "Value": {
                             "Ref": "AWS::StackName"
                         }
@@ -313,7 +313,7 @@
                     },
                     {
                         "Key": "Name",
-                        "Value": "Private-A"
+                        "Value": "Private Subnet A"
                     }
                 ]
             }
@@ -334,14 +334,14 @@
                 },
                 "Tags": [
                     {
-                        "Key": "Application",
+                        "Key": "StackName",
                         "Value": {
                             "Ref": "AWS::StackName"
                         }
                     },
                     {
                         "Key": "Name",
-                        "Value": "Private-B"
+                        "Value": "Private Subnet B"
                     }
                 ]
             }
@@ -354,7 +354,7 @@
                 },
                 "Tags": [
                     {
-                        "Key": "Application",
+                        "Key": "StackName",
                         "Value": {
                             "Ref": "AWS::StackName"
                         }
@@ -408,7 +408,7 @@
                 },
                 "Tags": [
                     {
-                        "Key": "Application",
+                        "Key": "StackName",
                         "Value": {
                             "Ref": "AWS::StackName"
                         }
