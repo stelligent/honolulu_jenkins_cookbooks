@@ -44,9 +44,13 @@
         "jenkinsstack": {
             "Type": "AWS::OpsWorks::Stack",
             "Properties": {
-                "DefaultSshKeyName" : "jonny-labs-eu-west-1",
-                "VpcId": {"Ref": "vpc"},
-                "DefaultSubnetId": {"Ref": "privateSubnetA"},
+                "DefaultSshKeyName": "jonny-labs-eu-west-1",
+                "VpcId": {
+                    "Ref": "vpc"
+                },
+                "DefaultSubnetId": {
+                    "Ref": "privateSubnetA"
+                },
                 "ConfigurationManager": {
                     "Name": "Chef",
                     "Version": "11.10"
@@ -55,10 +59,17 @@
                     "Ref": "AWS::StackName"
                 },
                 "ServiceRoleArn": {
-                    "Fn::GetAtt": ["OpsWorksServiceRole", "Arn"]
+                    "Fn::GetAtt": [
+                        "OpsWorksServiceRole",
+                        "Arn"
+                    ]
                 },
                 "DefaultInstanceProfileArn": {
-                    "Fn::GetAtt": ["OpsWorksInstanceProfile", "Arn"] },
+                    "Fn::GetAtt": [
+                        "OpsWorksInstanceProfile",
+                        "Arn"
+                    ]
+                },
                 "CustomJson": {
                     "pipeline": {
                         "source": {
@@ -67,25 +78,52 @@
                         "branch": {
                             "Ref": "branch"
                         },
-                        "jobs": ["jenkins-test", "clean-gemset", "become-production-jenkins", "create-new-jenkins", "job-seed"],
+                        "jobs": [
+                            "jenkins-test",
+                            "clean-gemset",
+                            "become-production-jenkins",
+                            "create-new-jenkins",
+                            "job-seed"
+                        ],
                         "global_vars": {
-                            "region": {"Ref": "AWS::Region"},
-                            "sdb_domain": {"Ref": "JenkinsSdbDomain"},
-                            "domain": {"Ref": "domain"},
-                            "name_of_jenkins_stack": {"Ref": "AWS::StackName"},
-                            "vpc": {"Ref": "vpc"},
-                            "privateSubnetA": {"Ref": "privateSubnetA"},
-                            "privateSubnetB": {"Ref": "privateSubnetB"}
+                            "region": {
+                                "Ref": "AWS::Region"
+                            },
+                            "sdb_domain": {
+                                "Ref": "JenkinsSdbDomain"
+                            },
+                            "domain": {
+                                "Ref": "domain"
+                            },
+                            "name_of_jenkins_stack": {
+                                "Ref": "AWS::StackName"
+                            },
+                            "vpc": {
+                                "Ref": "vpc"
+                            },
+                            "privateSubnetA": {
+                                "Ref": "privateSubnetA"
+                            },
+                            "privateSubnetB": {
+                                "Ref": "privateSubnetB"
+                            }
                         },
                         "users": [
-                            ["admin", "admin", "admin"]
+                            [
+                                "admin",
+                                "admin",
+                                "admin"
+                            ]
                         ],
                         "email": {
                             "username": {
                                 "Ref": "EmailUserKeys"
                             },
                             "secret_key": {
-                                "Fn::GetAtt": ["EmailUserKeys", "SecretAccessKey"]
+                                "Fn::GetAtt": [
+                                    "EmailUserKeys",
+                                    "SecretAccessKey"
+                                ]
                             },
                             "admin_email_address": {
                                 "Ref": "adminEmailAddress"
@@ -328,11 +366,10 @@
                     "sqlite"
                 ],
                 "CustomSecurityGroupIds": [
-                  {
-                    "Ref": "jenkinsSecurityGroup"
-                  }
+                    {
+                        "Ref": "jenkinsSecurityGroup"
+                    }
                 ],
-
                 "CustomRecipes": {
                     "Deploy": [
                         "jenkins::server",
@@ -346,26 +383,75 @@
                 }
             }
         },
-    "jenkinsSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription" : "Allow inbound requests from the ELB to the Jenkins instance",
-        "VpcId": {
-          "Ref": "vpc"
-        },
-        "SecurityGroupIngress": [
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "80",
-            "ToPort": "80",
-            "SourceSecurityGroupId": {
-              "Ref": "ELBSecurityGroup"
+        "jenkinsSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Allow inbound requests from the ELB to the Jenkins instance",
+                "VpcId": {
+                    "Ref": "vpc"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "SourceSecurityGroupId": {
+                            "Ref": "ELBSecurityGroup"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "SourceSecurityGroupId": {
+                            "Ref": "ELBSecurityGroup"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "SourceSecurityGroupId": {
+                            "Ref": "ELBSecurityGroup"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "9418",
+                        "ToPort": "9418",
+                        "SourceSecurityGroupId": {
+                            "Ref": "ELBSecurityGroup"
+                        }
+                    }
+                ],
+                "SecurityGroupEgress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "9418",
+                        "ToPort": "9418",
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ]
             }
-          }
-        ]
-      }
-    },
-
+        },
         "jenkins": {
             "Type": "AWS::OpsWorks::Instance",
             "Properties": {
@@ -521,12 +607,16 @@
                 ]
             }
         },
-        "JenkinsLayerLoadBalancerAttachment" : {
-          "Type": "AWS::OpsWorks::ElasticLoadBalancerAttachment",
-          "Properties": {
-            "ElasticLoadBalancerName" : { "Ref" : "JenkinsElasticLoadBalancer"},
-            "LayerId" : { "Ref" : "jenkinslayer"}
-          }
+        "JenkinsLayerLoadBalancerAttachment": {
+            "Type": "AWS::OpsWorks::ElasticLoadBalancerAttachment",
+            "Properties": {
+                "ElasticLoadBalancerName": {
+                    "Ref": "JenkinsElasticLoadBalancer"
+                },
+                "LayerId": {
+                    "Ref": "jenkinslayer"
+                }
+            }
         },
         "JenkinsElasticLoadBalancer": {
             "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
@@ -549,7 +639,7 @@
                     }
                 ],
                 "HealthCheck": {
-                    "Target" : "TCP:80",
+                    "Target": "TCP:80",
                     "HealthyThreshold": "3",
                     "UnhealthyThreshold": "5",
                     "Interval": "90",
