@@ -81,12 +81,9 @@
                 "VpcId": {
                     "Ref": "VPC"
                 },
+                "AvailabilityZone" : {"Fn::Join": ["", [{"Ref": "AWS::Region"}, "a"] ] },
                 "CidrBlock": {
-                    "Fn::FindInMap": [
-                        "SubnetConfig",
-                        "Public",
-                        "CIDR"
-                    ]
+                    "Fn::FindInMap": ["SubnetConfig", "Public", "CIDR"]
                 },
                 "Tags": [
                     {
