@@ -101,6 +101,9 @@
                             "vpc": {
                                 "Ref": "vpc"
                             },
+                            "publicSubnet": {
+                                "Ref": "publicSubnet"
+                            },
                             "privateSubnetA": {
                                 "Ref": "privateSubnetA"
                             },
