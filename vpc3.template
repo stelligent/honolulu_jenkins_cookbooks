@@ -257,7 +257,7 @@
                 "Egress": "false",
                 "CidrBlock": "0.0.0.0/0",
                 "PortRange": {
-                    "From": "1024",
+                    "From": "0",
                     "To": "65535"
                 }
             }
@@ -518,7 +518,7 @@
                 ]
             }
         },
- 
+
         "NATSecurityGroup" : {
             "Type": "AWS::EC2::SecurityGroup",
             "Properties": {
