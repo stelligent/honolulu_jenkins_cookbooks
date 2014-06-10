@@ -181,7 +181,7 @@
                                 },
                                 {
                                     "name": "delivery-pipeline-plugin",
-                                    "version": "0.6.10"
+                                    "version": "0.8.0"
                                 },
                                 {
                                     "name": "email-ext",
@@ -309,10 +309,7 @@
                                 }
                             ],
                             "install_method": "package",
-                            "version": "1.562-1.1"
-                        },
-                        "node": {
-                            "executors": 8
+                            "version": "1.567-1.1"
                         }
                     }
                 },
