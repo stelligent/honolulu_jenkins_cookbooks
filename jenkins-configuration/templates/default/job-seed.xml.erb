@@ -73,6 +73,7 @@ export user=&quot;ec2-user&quot;
 bundle exec cucumber --color \
          --format json \
          --out jenkins_cucumber.json \
+         --tag @pipeline \
          pipeline/features
 </command>
     </hudson.tasks.Shell>
