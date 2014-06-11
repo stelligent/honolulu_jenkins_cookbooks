@@ -44,7 +44,6 @@
         "jenkinsstack": {
             "Type": "AWS::OpsWorks::Stack",
             "Properties": {
-                "DefaultSshKeyName": "jonny-labs-ap-southeast-1",
                 "VpcId": {
                     "Ref": "vpc"
                 },
