@@ -513,7 +513,7 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "NAT Device"
+                        "Value": {"Fn::Join": ["", [ { "Ref": "AWS::StackName" }, " - NAT Device" ] ] }
                     }
                 ]
             }
@@ -582,7 +582,7 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "Bastion Host"
+                        "Value": {"Fn::Join": ["", [ { "Ref": "AWS::StackName" }, " - Bastion Host" ] ] }
                     }
                 ]
             }
