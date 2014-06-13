@@ -25,9 +25,35 @@ how to use this repository
 
 This repository is design to be used as the custom Chef cookbooks repository for a Jenkins stack built using Amazon's OpsWorks service. I suppose you could use it to build a custom Jenkins server without using OpsWorks, but I haven't tried that so if you give it a shot you're on your own. :)
 
-Included in the repository is CloudFormation template that will handle building the appropriate IAM roles and OpsWorks stack. To run it, you will need the [AWS CLI tool installed and configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html). Then, just pull down the repo and run this command:
+We've designed the infrastructure for Honolulu Answers, as well as the Jenkins server, to be run in a VPC. To that end, we provide a CloudFormation template to set up the VPC.
 
-    aws cloudformation create-stack --stack-name Honolulu-Jenkins --template-body "`cat jenkins.template`"  --disable-rollback  --timeout-in-minutes 60 --parameters ParameterKey=domain,ParameterValue="yourdomain.com"
+Also included in the repository is CloudFormation template that will handle building the appropriate IAM roles and OpsWorks stack. To run either template, you have a couple options.
+
+The easier one is probably to clone this repository and run the Ruby script inside that will spin up the VPC, and then Jenkins server inside of it. To do this, [Ruby](https://www.ruby-lang.org/en/) needs to be installed on your system. You should probably install it with [RVM](http://rvm.io/) though. You'll also need the [AWS SDK for Ruby 2.0](https://github.com/aws/aws-sdk-core-ruby) which can be installed with `gem install aws-sdk-core --pre`.
+
+Once both of those are installed, you can run this command to set everything up:
+
+    ``ruby create_vpc_and_jenkins.rb --region aws-region-to-build-in --keyname your-ec2-keypair-name --domain yourdomain.com``
+
+The parameters are:
+
+* **keyname**: the name of an EC2 keypair that exists in that region. It will be linked to the NAT and Bastion host boxes that the VPC template creates.
+* **domain**: The Route 53 hosted zone that Jenkins will manipulate for its Blue/Green deployments. If you don't have a domain set up, you can leave this blank, but the Blue/Green jobs will fail if you try to run them.
+* **region**: The AWS region you want to run everything in. Defaults to US-West-2, Oregon.
+
+ Your other option is to run the template manually yourself. You will need the [AWS CLI tool installed and configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html). Then, just pull down the repo and run these commands:
+
+    aws cloudformation create-stack --stack-name "Honolulu-VPC" --template-body "`cat vpc.template`" --region your-region --parameters ParameterKey=KeyName,ParameterValue=your-ec2-keypair
+
+    aws cloudformation create-stack --output json --disable-rollback --stack-name "Honolulu-Jenkins" --template-body "`cat jenkins.template`" --region your-region --capabilities="CAPABILITY_IAM" --parameters ParameterKey=domain,ParameterValue="yourdomain.com"   ParameterKey=adminEmailAddress,ParameterValue="you@example.com"   ParameterKey=vpc,ParameterValue=the-vpc-id   ParameterKey=publicSubnet,ParameterValue=the-public-subnet-id   ParameterKey=privateSubnetA,ParameterValue=the-private-subnet-A-id ParameterKey=privateSubnetB,ParameterValue=the-private-subnet-A-id
+
+The parameters for those templates are as follows:
+
+* **region**: The AWS region you want to run everything in.
+* **keyname**: the name of an EC2 keypair that exists in that region. It will be linked to the NAT and Bastion host boxes that the VPC template creates.
+* **domain**: The Route 53 hosted zone that Jenkins will manipulate for its Blue/Green deployments. If you don't have a domain set up, you can pass in a dummy one (example.com will work), but the Blue/Green jobs will fail if you try to run them.
+* **vpc**, **publicSubnet**, **privateSubnetA**, and **privateSubnetB** are outputs from the VPC template and must be inputted into the Jenkins template, so it knows where to build the instance and load balancer. It also saves this information for building Honolulu Answers application servers.
+
 
 The template supports three parameters: _domain_, _repository_, and _branch_. The only required one is _domain_, which is Route 53 Hosted zone you already have set up. You don't _need_ this, but without it the jobs that manipulate Route 53 entries will fail. 
 
