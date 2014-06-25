@@ -23,7 +23,7 @@ The custom cookbooks are as follows:
 how to use this repository
 ======================
 
-This repository is design to be used as the custom Chef cookbooks repository for a Jenkins stack built using Amazon's OpsWorks service. I suppose you could use it to build a custom Jenkins server without using OpsWorks, but I haven't tried that so if you give it a shot you're on your own. :)
+This repository is designed to be used as the custom Chef cookbooks repository for a Jenkins stack built using Amazon's OpsWorks service. I suppose you could use it to build a custom Jenkins server without using OpsWorks, but I haven't tried that so if you give it a shot you're on your own. :)
 
 We've designed the infrastructure for Honolulu Answers, as well as the Jenkins server, to be run in a VPC. To that end, we provide a CloudFormation template to set up the VPC.
 
