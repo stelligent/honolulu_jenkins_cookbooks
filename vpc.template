@@ -488,7 +488,7 @@
         "NATDevice": {
             "Type": "AWS::EC2::Instance",
             "Properties": {
-                "InstanceType": "t1.micro",
+                "InstanceType": "m1.small",
                 "SubnetId": {
                     "Ref": "PublicSubnet"
                 },
@@ -601,7 +601,113 @@
                { "IpProtocol" : "tcp", "FromPort" : "80",  "ToPort" : "80",  "CidrIp" : "0.0.0.0/0" } ,
                { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" } ]
           }
-        }
+        },
+        "dummyOpsWorksStack": {
+            "Type": "AWS::OpsWorks::Stack",
+            "Properties": {
+                "Name": "Dummy-VPC-Stack-You-Can-Delete",
+                "ServiceRoleArn": {
+                    "Fn::GetAtt": [
+                        "DummyServiceRole",
+                        "Arn"
+                    ]
+                },
+                "DefaultInstanceProfileArn": {
+                    "Fn::GetAtt": [
+                        "DummyInstanceProfile",
+                        "Arn"
+                    ]
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                },
+                "DefaultSubnetId": {
+                    "Ref": "PrivateSubnetA"
+                },
+                "DefaultOs": "Amazon Linux"
+            }
+        },       
+        "DummyServiceRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "opsworks.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "opsworks-service",
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "*",
+                                    "Resource": "*"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "DummyInstanceRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "opsworks-service",
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "*",
+                                    "Resource": "*"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "DummyInstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [
+                    {
+                        "Ref": "DummyInstanceRole"
+                    }
+                ]
+            }
+        }      
     },
     "Outputs": {
         "VPC": {
