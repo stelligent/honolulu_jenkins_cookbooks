@@ -110,6 +110,8 @@ aws_region = opts[:region]
 Aws.config = { region: aws_region, http_wire_trace: false }
 
 resources = create_vpc_stack opts
+puts "Giving the VPC a chance to generate security groups..."
+sleep 30
 create_jenkins_stack opts, resources
 
 
