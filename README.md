@@ -54,10 +54,7 @@ The parameters for those templates are as follows:
 * **domain**: The Route 53 hosted zone that Jenkins will manipulate for its Blue/Green deployments. If you don't have a domain set up, you can pass in a dummy one (example.com will work), but the Blue/Green jobs will fail if you try to run them.
 * **vpc**, **publicSubnet**, **privateSubnetA**, and **privateSubnetB** are outputs from the VPC template and must be inputted into the Jenkins template, so it knows where to build the instance and load balancer. It also saves this information for building Honolulu Answers application servers.
 
-
-The template supports three parameters: _domain_, _repository_, and _branch_. The only required one is _domain_, which is Route 53 Hosted zone you already have set up. You don't _need_ this, but without it the jobs that manipulate Route 53 entries will fail. 
-
-If you'd like to specify a github repository other than the Honolulu Answers app, you can pass in a parameter. The URL must be a github repository, and it must be a public repo. You can also specify a branch if you need one.
+The Jenkins template also supports two other optional parameters: _repository_ and _branch_. If you'd like to specify a github repository other than the Honolulu Answers app, you can pass in a parameter. The URL must be a github repository, and it must be a public repo. You can also specify a branch if you need one.
 
     --parameters ParameterKey=repository,ParameterValue=https://github.com/yourgithubrepo.git
     --parameters ParameterKey=branch,ParameterValue=your_branch_name
