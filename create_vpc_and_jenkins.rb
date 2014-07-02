@@ -51,7 +51,7 @@ def create_vpc_stack opts
   # create a cfn stack with all the resources the opsworks stack will need
   @cfn = Aws::CloudFormation.new 
   cfn_stack_name = "HonoluluAnswers-VPC-#{@timestamp}"
-  @cfn.create_stack stack_name: cfn_stack_name, template_body: File.open("vpc.template", "rb").read, timeout_in_minutes: 10, parameters: [
+  @cfn.create_stack stack_name: cfn_stack_name, template_body: File.open("vpc.template", "rb").read, disable_rollback: true, timeout_in_minutes: 20, parameters: [
       { parameter_key: "KeyName",    parameter_value: opts[:keyname] }
     ]
 
