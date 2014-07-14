@@ -168,7 +168,7 @@ Then(/^I should see it is a "(.*?)" instance$/) do |arg1|
 end
 
 Then(/^I should see that it is associated with an elastic IP$/) do
-  expect(@instance_to_check.instances.first.network_interfaces.size == 0).to be_false
+  expect(@instance_to_check.instances.first.network_interfaces.size).to be > 0
   eips_for_instance = @ec2.describe_addresses.addresses.select {|eip|  eip.instance_id == @instance_to_check.instances.first.instance_id}
   expect(eips_for_instance.size).to be(1), "Expected one EIP associated with the instance, found #{eips_for_instance.size}"
 end
