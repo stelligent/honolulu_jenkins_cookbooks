@@ -164,7 +164,7 @@ end
 
 Then(/^I should see it is a "(.*?)" instance$/) do |arg1|
   instance_type = @instance_to_check.instances.first.instance_type
-  expect(instance_type == arg1).to be_true, "Instance is wrong type, expect '#{arg1}', but found '#{instance_type}'"
+  expect(instance_type).to eq(arg1), "Instance is wrong type, expect '#{arg1}', but found '#{instance_type}'"
 end
 
 Then(/^I should see that it is associated with an elastic IP$/) do
