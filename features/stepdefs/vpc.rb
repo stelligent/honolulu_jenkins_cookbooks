@@ -8,12 +8,11 @@ end
 Given(/^I know what VPC to look at$/) do
   vpcid = ENV["vpcid"]
   resp = @ec2.describe_vpcs(vpc_ids: [vpcid])
+  @vpc = resp.vpcs.first
 end
 
 When(/^I lookup the VPC information$/) do
-  vpcid = ENV["vpcid"]
-  resp = @ec2.describe_vpcs(vpc_ids: [vpcid])
-  @vpc = resp.vpcs.first
+  expect(@vpc).to be
 end
 
 Then(/^I should see an internet gateway$/) do
@@ -66,16 +65,16 @@ end
 Then(/^I should see a bastion host$/) do
   public_subnet_id = @public_subnets.first.subnet_id
   public_instances = @ec2.describe_instances(filters: [{name: "subnet-id", values: [public_subnet_id]}]).reservations
-  bastion = nil
+  @instance_to_check = nil
   public_instances.each do |instance|
     instance.instances.first.tags.each do |tag|
       if tag.key == "Name" and tag.value.include? "Bastion"
-        bastion = instance
+        @instance_to_check = instance
       end
     end
   end
 
-  expect(bastion).to be, "Did not find Bastion host in public subnet"
+  expect(@instance_to_check).to be, "Did not find Bastion host in public subnet"
 
 end
 
@@ -150,26 +149,53 @@ Then(/^I should see that the private route table routes to the NAT instance$/) d
 end
 
 When(/^I look up the bastion host for the VPC$/) do
-  pending # express the regexp above with the code you wish you had
+  instances = @ec2.describe_instances(filters: [{name: "vpc-id", values: [@vpc.vpc_id]}]).reservations
+  @instance_to_check = nil
+  instances.each do |instance|
+    instance.instances.first.tags.each do |tag|
+      if tag.key == "Name" and tag.value.include? "Bastion"
+        @instance_to_check = instance
+      end
+    end
+  end
+
+  expect(@instance_to_check).to be, "Did not find Bastion host in VPC"
 end
 
 Then(/^I should see it is a "(.*?)" instance$/) do |arg1|
-  pending # express the regexp above with the code you wish you had
+  instance_type = @instance_to_check.instances.first.instance_type
+  expect(instance_type == arg1).to be_true, "Instance is wrong type, expect '#{arg1}', but found '#{instance_type}'"
 end
 
 Then(/^I should see that it is associated with an elastic IP$/) do
-  pending # express the regexp above with the code you wish you had
+  expect(@instance_to_check.instances.first.network_interfaces.size == 0).to be_false
+  eips_for_instance = @ec2.describe_addresses.addresses.select {|eip|  eip.instance_id == @instance_to_check.instances.first.instance_id}
+  expect(eips_for_instance.size).to be(1), "Expected one EIP associated with the instance, found #{eips_for_instance.size}"
 end
 
 Then(/^I should see that its security group allows port "(.*?)"$/) do |arg1|
-  pending # express the regexp above with the code you wish you had
-end
 
-Then(/^I should be able to SSH into that instance$/) do
-  pending # express the regexp above with the code you wish you had
+  groups = @instance_to_check.instances.first.security_groups
+  expect(groups.size).to eq(1)
+
+  @ec2.describe_security_groups(group_ids: [groups.first.group_id]).security_groups.each do |group|
+    found = group.ip_permissions.select do |perm|
+      perm.from_port == arg1.to_i && perm.to_port == arg1.to_i
+    end
+    expect(found.size).to eq(1), "Did not find port #{arg1} open in security group #{group.group_name}"
+  end
 end
 
 When(/^I look up the NAT host for the VPC$/) do
-  pending # express the regexp above with the code you wish you had
-end
+  instances = @ec2.describe_instances(filters: [{name: "vpc-id", values: [@vpc.vpc_id]}]).reservations
+  @instance_to_check = nil
+  instances.each do |instance|
+    instance.instances.first.tags.each do |tag|
+      if tag.key == "Name" and tag.value.include? "NAT"
+        @instance_to_check = instance
+      end
+    end
+  end
 
+  expect(@instance_to_check).to be, "Did not find NAT host in VPC"
+end

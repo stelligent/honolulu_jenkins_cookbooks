@@ -21,16 +21,15 @@ Feature: Scripted install of Jenkins
 
     Scenario: The Bastion Host is configured correctly
         When I look up the bastion host for the VPC
-        Then I should see it is a "t2.micro" instance
+        Then I should see it is a "t1.micro" instance
         And  I should see that it is associated with an elastic IP
         And  I should see that its security group allows port "22"
         And  I should see that its security group allows port "80"
         And  I should see that its security group allows port "443"
-        And  I should be able to SSH into that instance
 
     Scenario: The NAT is configured correctly
         When I look up the NAT host for the VPC
-        Then I should see it is a "t2.small" instance
+        Then I should see it is a "m1.small" instance
         And  I should see that it is associated with an elastic IP
         And  I should see that its security group allows port "22"
         And  I should see that its security group allows port "80"
@@ -38,4 +37,3 @@ Feature: Scripted install of Jenkins
         And  I should see that its security group allows port "587"
         And  I should see that its security group allows port "5432"
         And  I should see that its security group allows port "9418"
-        And  I should be able to SSH into that instance
