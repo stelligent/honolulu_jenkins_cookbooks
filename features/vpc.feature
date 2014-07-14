@@ -1,8 +1,8 @@
 @jenkins
-Feature: Scripted install of Jenkins
+Feature: Scripted creation of VPC
     As a continuous delivery engineer
-    I would like Jenkins to be installed and configured correctly
-    so that that my Jenkins server will work as expected
+    I would like my VPC to be installed and configured correctly
+    so that that my infrastructure server will work as expected
 
     Background:
         Given I can access the AWS environment
