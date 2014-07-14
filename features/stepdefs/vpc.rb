@@ -6,7 +6,7 @@ Given(/^I can access the AWS environment$/) do
 end
 
 Given(/^I know what VPC to look at$/) do
-  vpcid = ENV["vpcid"]
+  vpcid = ENV["vpc"]
   resp = @ec2.describe_vpcs(vpc_ids: [vpcid])
   @vpc = resp.vpcs.first
 end
