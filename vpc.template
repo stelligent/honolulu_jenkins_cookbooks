@@ -84,7 +84,7 @@
                 "VpcId": {
                     "Ref": "VPC"
                 },
-                "AvailabilityZone" : {"Fn::Join": ["", [{"Ref": "AWS::Region"}, "c"] ] },
+                "AvailabilityZone" : {"Fn::Join": ["", [{"Ref": "AWS::Region"}, "a"] ] },
                 "CidrBlock": {
                     "Fn::FindInMap": ["SubnetConfig", "Public", "CIDR"]
                 },
@@ -293,7 +293,7 @@
         "PrivateSubnetA": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "AvailabilityZone" : {"Fn::Join": ["", [{"Ref": "AWS::Region"}, "c"] ] },
+                "AvailabilityZone" : {"Fn::Join": ["", [{"Ref": "AWS::Region"}, "a"] ] },
                 "VpcId": {
                     "Ref": "VPC"
                 },
@@ -321,7 +321,7 @@
         "PrivateSubnetB": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "AvailabilityZone" : {"Fn::Join": ["", [{"Ref": "AWS::Region"}, "d"] ] },
+                "AvailabilityZone" : {"Fn::Join": ["", [{"Ref": "AWS::Region"}, "b"] ] },
                 "VpcId": {
                     "Ref": "VPC"
                 },
