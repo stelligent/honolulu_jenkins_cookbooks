@@ -24,9 +24,9 @@
         "Private2": "us-west-1c"
       },
       "us-west-2": {
-        "Public1": "us-west-2c",
-        "Private1": "us-west-2c",
-        "Private2": "us-west-2d"
+        "Public1": "us-west-2a",
+        "Private1": "us-west-2a",
+        "Private2": "us-west-2b"
       },
       "eu-west-1": {
         "Public1": "eu-west-1a",
