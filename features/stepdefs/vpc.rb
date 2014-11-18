@@ -1,7 +1,7 @@
 require 'aws-sdk-core'
 
 Given(/^I can access the AWS environment$/) do
-  @ec2 = Aws::EC2.new(region: ENV["region"])
+  @ec2 = Aws::EC2::Client.new(region: ENV["region"])
   resp = @ec2.describe_vpcs()
 end
 

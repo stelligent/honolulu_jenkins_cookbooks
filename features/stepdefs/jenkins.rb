@@ -5,7 +5,7 @@ When(/^I lookup the OpsWorks stack for the local machine$/) do
   instance_id.should_not be_nil
   puts "instance id: #{instance_id}"
     
-  @opsworks = Aws::OpsWorks.new region: "us-east-1"
+  @opsworks = Aws::OpsWorks::Client.new region: "us-east-1"
   
   @stack = nil
   @opsworks.describe_stacks.stacks.each do |stack| 
