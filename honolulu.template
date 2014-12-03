@@ -781,7 +781,7 @@
           "Revision" : "vpc-rewrite",
           "Type": "git",
           "Url": "https://github.com/stelligent/honolulu_jenkins_cookbooks.git"
-        }
+        },
         "CustomJson": {
           "pipeline": {
             "source": {
@@ -1055,7 +1055,7 @@
         "UseOpsworksSecurityGroups": false,
         "VpcId": {
           "Ref": "VPC"
-        },
+        }
       }
     },
     "jenkinslayer": {
