@@ -1,0 +1,21 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    aws-sdk-core (2.0.11)
+      builder (~> 3.0)
+      jmespath (~> 1.0)
+      multi_json (~> 1.0)
+      multi_xml (~> 0.5)
+    builder (3.2.2)
+    jmespath (1.0.1)
+      multi_json (~> 1.0)
+    multi_json (1.10.1)
+    multi_xml (0.5.5)
+    trollop (2.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  aws-sdk-core
+  trollop
