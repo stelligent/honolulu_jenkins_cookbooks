@@ -47,15 +47,17 @@ def print_and_flush(str)
 end
 
 
-def create_vpc_stack opts
+def create_stack opts
   # create a cfn stack with all the resources the opsworks stack will need
   @cfn = Aws::CloudFormation::Client.new 
-  cfn_stack_name = "HonoluluAnswers-VPC-#{@timestamp}"
-  @cfn.create_stack stack_name: cfn_stack_name, template_body: File.open("vpc.template", "rb").read, disable_rollback: true, timeout_in_minutes: 20, parameters: [
-      { parameter_key: "KeyName",    parameter_value: opts[:keyname] }
+  cfn_stack_name = "HonoluluAnswers-#{@timestamp}"
+  @cfn.create_stack stack_name: cfn_stack_name, template_body: File.open("honolulu.template", "rb").read, disable_rollback: true, timeout_in_minutes: 20, parameters: [
+      { parameter_key: "KeyName",           parameter_value: opts[:keyname] },
+      { parameter_key: "domain",            parameter_value: opts[:domain]  },
+      { parameter_key: "adminEmailAddress", parameter_value: opts[:email]   },
     ]
 
-  print_and_flush "creating VPC..."
+  print_and_flush "creating stack..."
   while (stack_in_progress cfn_stack_name)
     print_and_flush "."
     sleep 10
@@ -69,30 +71,6 @@ def create_vpc_stack opts
   end
 
   resources
-end
-
-def create_jenkins_stack opts, resources
-  vpc = resources["VPC"]
-  publicSubnet = resources["PublicSubnet"]
-  privateSubnetA = resources["PrivateSubnetA"]
-  privateSubnetB = resources["PrivateSubnetB"]
-
-  cfn_stack_name = "HonoluluAnswers-Jenkins-#{@timestamp}"
-  @cfn.create_stack stack_name: cfn_stack_name, template_body: File.open("jenkins.template", "rb").read, timeout_in_minutes: 45, disable_rollback: true, capabilities: ["CAPABILITY_IAM"], parameters: [
-      { parameter_key: "domain",            parameter_value: opts[:domain]  },
-      { parameter_key: "adminEmailAddress", parameter_value: opts[:email]   },
-      { parameter_key: "vpc",               parameter_value: vpc            },
-      { parameter_key: "publicSubnet",      parameter_value: publicSubnet   },
-      { parameter_key: "privateSubnetA",    parameter_value: privateSubnetA },
-      { parameter_key: "privateSubnetB",    parameter_value: privateSubnetB }
-    ]
-
-  print_and_flush "creating Jenkins server..."
-  while (stack_in_progress cfn_stack_name)
-    print_and_flush "."
-    sleep 10
-  end
-  puts
 end
 
 # using trollop to do command line options
@@ -110,9 +88,7 @@ aws_region = opts[:region]
 # curious what the AWS calls look like? set http_wire_trace to true.
 Aws.config = { region: aws_region, http_wire_trace: false }
 
-resources = create_vpc_stack opts
-puts "Giving the VPC a chance to generate security groups..."
-sleep 30
-create_jenkins_stack opts, resources
+resources = create_stack opts
+
 
 
