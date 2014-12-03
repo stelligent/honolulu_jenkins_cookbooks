@@ -814,13 +814,13 @@
                 "Ref": "VPC"
               },
               "publicSubnet": {
-                "Ref": "publicSubnet"
+                "Ref": "PublicSubnet"
               },
               "privateSubnetA": {
-                "Ref": "privateSubnetA"
+                "Ref": "PrivateSubnetA"
               },
               "privateSubnetB": {
-                "Ref": "privateSubnetB"
+                "Ref": "PrivateSubnetB"
               }
             },
             "users": [
@@ -1040,7 +1040,7 @@
         },
         "DefaultOs": "Amazon Linux",
         "DefaultSubnetId": {
-          "Ref": "privateSubnetA"
+          "Ref": "PrivateSubnetA"
         },
         "Name": {
           "Ref": "AWS::StackName"
@@ -1213,7 +1213,7 @@
         ],
         "Os": "Amazon Linux",
         "RootDeviceType": "ebs",
-        "SshKey": "jeff-labs",
+        "SshKeyName": "jeff-labs",
         "StackId": {
           "Ref": "jenkinsstack"
         }
@@ -1377,7 +1377,7 @@
         ],
           "Subnets": [
           {
-            "Ref": "publicSubnet"
+            "Ref": "PublicSubnet"
           }
         ],
           "Listeners": [
