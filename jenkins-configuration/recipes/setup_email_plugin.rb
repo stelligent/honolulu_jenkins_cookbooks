@@ -59,8 +59,8 @@ template "/var/lib/jenkins/hudson.plugins.emailext.ExtendedEmailPublisher.xml" d
       :email_username => node["pipeline"]["email"]["username"],
       :email_password => smtp_password,
       :email_address  => node["pipeline"]["email"]["admin_email_address"],
-      :smtp_server    => node["pipeline"]["email"]["stmp_server"],
-      :smtp_port      => node["pipeline"]["email"]["stmp_port"]
+      :smtp_server    => node["pipeline"]["email"]["smtp_server"],
+      :smtp_port      => node["pipeline"]["email"]["smtp_port"]
     }
   )
 end
