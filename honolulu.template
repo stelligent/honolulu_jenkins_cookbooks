@@ -616,34 +616,49 @@
     },
     "BastionHost": {
       "Type": "AWS::EC2::Instance",
+      "Metadata" : {
+        "AWS::CloudFormation::Init" : {
+          "config" : {
+            "commands" : {
+              "00-security-update" : {
+                 "command" : "yum -y update --security",
+                 "ignoreErrors" : "true"
+              }
+            }
+          }
+        }
+      },
       "Properties": {
-        "InstanceType": "t1.micro",
         "KeyName": {
           "Ref": "KeyName"
-        },
-        "SubnetId": {
-          "Ref": "PublicSubnet"
         },
         "ImageId": {
           "Fn::FindInMap": [
             "AWSNATAMI",
-          {
-            "Ref": "AWS::Region"
-          },
-          "AMI"
-            ]
+            { "Ref": "AWS::Region" },
+            "AMI"
+          ]
         },
+        "InstanceType": "t1.micro",
         "SecurityGroupIds": [
-        {
-          "Ref": "BastionSecurityGroup"
-        }
+          { "Ref": "BastionSecurityGroup" }
         ],
-          "Tags": [
+        "SubnetId": {
+          "Ref": "PublicSubnet"
+        },
+        "Tags": [
           {
             "Key": "Name",
             "Value": {"Fn::Join": ["", [ { "Ref": "AWS::StackName" }, " - Bastion Host" ] ] }
           }
-        ]
+        ],
+        "UserData": { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+          "yum update -y aws-cfn-bootstrap\n",
+          "/opt/aws/bin/cfn-init -v -s ", { "Ref" : "AWS::StackId" }, " -r BastionHost ",
+          "         --region ", { "Ref" : "AWS::Region" }, "\n",
+          "/opt/aws/bin/cfn-signal -e $? '", { "Ref" : "BastionWaitHandle" }, "'\n"
+        ]]}}
       }
     },
     "BastionSecurityGroup": {
@@ -661,111 +676,16 @@
         { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" } ]
       }
     },
-    "dummyOpsWorksStack": {
-      "Type": "AWS::OpsWorks::Stack",
-      "Properties": {
-        "Name": "Dummy-VPC-Stack-You-Can-Delete",
-        "ServiceRoleArn": {
-          "Fn::GetAtt": [
-            "DummyServiceRole",
-          "Arn"
-            ]
-        },
-        "DefaultInstanceProfileArn": {
-          "Fn::GetAtt": [
-            "DummyInstanceProfile",
-          "Arn"
-            ]
-        },
-        "VpcId": {
-          "Ref": "VPC"
-        },
-        "DefaultSubnetId": {
-          "Ref": "PrivateSubnetA"
-        },
-        "DefaultOs": "Amazon Linux"
+    "BastionWaitCondition": {
+      "Type" : "AWS::CloudFormation::WaitCondition",
+      "DependsOn" : "BastionHost",
+      "Properties" : {
+        "Handle" : {"Ref" : "BastionWaitHandle"},
+        "Timeout" : "2400"
       }
     },
-    "DummyServiceRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-          {
-            "Effect": "Allow",
-            "Principal": {
-              "Service": [
-                "opsworks.amazonaws.com"
-                ]
-            },
-            "Action": [
-              "sts:AssumeRole"
-              ]
-          }
-          ]
-        },
-        "Path": "/",
-        "Policies": [
-        {
-          "PolicyName": "opsworks-service",
-          "PolicyDocument": {
-            "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": "*",
-              "Resource": "*"
-            }
-            ]
-          }
-        }
-        ]
-      }
-    },
-    "DummyInstanceRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-          {
-            "Effect": "Allow",
-            "Principal": {
-              "Service": [
-                "ec2.amazonaws.com"
-                ]
-            },
-            "Action": [
-              "sts:AssumeRole"
-              ]
-          }
-          ]
-        },
-        "Path": "/",
-        "Policies": [
-        {
-          "PolicyName": "opsworks-service",
-          "PolicyDocument": {
-            "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": "*",
-              "Resource": "*"
-            }
-            ]
-          }
-        }
-        ]
-      }
-    },
-    "DummyInstanceProfile": {
-      "Type": "AWS::IAM::InstanceProfile",
-      "Properties": {
-        "Path": "/",
-        "Roles": [
-        {
-          "Ref": "DummyInstanceRole"
-        }
-        ]
-      }
+    "BastionWaitHandle": {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle"
     },
     "JenkinsSdbDomain": {
       "Type": "AWS::SDB::Domain"
@@ -773,6 +693,10 @@
     "jenkinsstack": {
       "Type": "AWS::OpsWorks::Stack",
       "Properties": {
+        "ChefConfiguration": {
+          "BerkshelfVersion": "3.1.3",
+          "ManageBerkshelf": true
+        },
         "ConfigurationManager": {
           "Name": "Chef",
           "Version": "11.10"
@@ -1079,42 +1003,42 @@
         },
         "Packages": [
           "readline-devel",
-        "libyaml-devel",
-        "libffi-devel",
-        "mlocate",
-        "libxml2",
-        "postgresql",
-        "postgresql-devel",
-        "memcached",
-        "ruby19-devel",
-        "libxml2-devel",
-        "libxslt-devel",
-        "git",
-        "make",
-        "gcc",
-        "hunspell",
-        "gettext",
-        "postfix",
-        "cyrus-sasl",
-        "cyrus-sasl-devel",
-        "sqlite"
-          ],
+          "libyaml-devel",
+          "libffi-devel",
+          "mlocate",
+          "libxml2",
+          "postgresql",
+          "postgresql-devel",
+          "memcached",
+          "ruby19-devel",
+          "libxml2-devel",
+          "libxslt-devel",
+          "git",
+          "make",
+          "gcc",
+          "hunspell",
+          "gettext",
+          "postfix",
+          "cyrus-sasl",
+          "cyrus-sasl-devel",
+          "sqlite"
+        ],
         "CustomSecurityGroupIds": [
         {
           "Ref": "jenkinsSecurityGroup"
         }
         ],
-          "CustomRecipes": {
-            "Deploy": [
-              "jenkins::server",
+        "CustomRecipes": {
+          "Deploy": [
+            "jenkins::server",
             "jenkins-configuration::vars",
             "jenkins::proxy",
             "jenkins-configuration::jobs",
             "jenkins-configuration::setup_email_plugin",
             "opsworks_nodejs",
             "jenkins-configuration::users"
-              ]
-          }
+          ]
+        }
       }
     },
     "jenkinsSecurityGroup": {
@@ -1131,6 +1055,14 @@
           "ToPort": "22",
           "SourceSecurityGroupId": {
             "Ref": "ELBSecurityGroup"
+          }
+        },
+        {
+          "IpProtocol": "tcp",
+          "FromPort": "22",
+          "ToPort": "22",
+          "SourceSecurityGroupId": {
+            "Ref": "BastionSecurityGroup"
           }
         },
         {
