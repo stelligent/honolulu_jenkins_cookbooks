@@ -21,6 +21,8 @@
 #THE SOFTWARE.
 
 # lifted from http://blog.open-tribute.org/2013/09/how-to-get-your-ses-smtp-password-from.html
+# based on information at http://docs.aws.amazon.com/ses/latest/DeveloperGuide/smtp-credentials.html
+# on generating SES creds from existing IAM user creds
 require 'openssl'
 require 'base64'
 
