@@ -37,6 +37,13 @@ verSignature = version + signature
 smtp_password = Base64.encode64(verSignature)
 
 
+# for our scripts later to be able to know this ohai resource
+file "/etc/admin_email" do
+  owner "root"
+  group "root"
+  content node["pipeline"]["email"]["admin_email_address"]
+  mode 0644
+end
 
 template "/etc/sysconfig/jenkins" do
   owner "root"
