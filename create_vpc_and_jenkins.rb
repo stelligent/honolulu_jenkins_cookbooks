@@ -52,7 +52,7 @@ def create_stack opts
   @cfn = Aws::CloudFormation::Client.new 
   cfn_stack_name = "HonoluluAnswers-#{@timestamp}"
   @cfn.create_stack stack_name: cfn_stack_name, template_body: File.open("honolulu.template", "rb").read,
-      disable_rollback: true, timeout_in_minutes: 20, capabilities: ["CAPABILITY_IAM"],
+      disable_rollback: true, timeout_in_minutes: 65, capabilities: ["CAPABILITY_IAM"],
       parameters: [
       { parameter_key: "KeyName",           parameter_value: opts[:keyname] },
       { parameter_key: "domain",            parameter_value: opts[:domain]  },
