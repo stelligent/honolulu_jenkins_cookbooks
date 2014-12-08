@@ -772,7 +772,7 @@
           "jenkins": {
             "master": {
               "install_method": "package"
-            }
+            },
             "notifications": {
               "enabled": "false"
             },
