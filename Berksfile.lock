@@ -1,10 +1,18 @@
 {
   "sources": {
+    "apache2": {
+      "locked_version": "3.0.0"
+    },
     "jenkins": {
       "locked_version": "2.2.1"
     },
     "yum": {
       "locked_version": "2.4.2"
+    },
+    "rvm": {
+      "locked_version": "0.10.1",
+      "git": "git://github.com/fnichol/chef-rvm.git",
+      "ref": "8a877e9b497f8fb06dfe6f5975561331b3924243"
     },
     "python": {
       "locked_version": "1.4.6"
@@ -14,6 +22,12 @@
     },
     "magic_shell": {
       "locked_version": "1.0.0"
+    },
+    "iptables": {
+      "locked_version": "0.14.0"
+    },
+    "logrotate": {
+      "locked_version": "1.7.0"
     },
     "apt": {
       "locked_version": "2.6.0"
@@ -26,6 +40,12 @@
     },
     "yum-epel": {
       "locked_version": "0.5.3"
+    },
+    "java": {
+      "locked_version": "1.29.0"
+    },
+    "chef_gem": {
+      "locked_version": "0.1.0"
     }
   }
 }
