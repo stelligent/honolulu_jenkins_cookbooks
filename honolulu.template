@@ -1029,10 +1029,8 @@
         }
         ],
         "CustomRecipes": {
-          "Setup": [
-            "rvm::system"
-          ],
           "Deploy": [
+            "rvm::system",
             "jenkins::server",
             "jenkins-configuration::vars",
             "jenkins::proxy",
