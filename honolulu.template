@@ -716,11 +716,11 @@
             },
             "jobs": [
               "jenkins-test",
-            "clean-gemset",
-            "become-production-jenkins",
-            "create-new-jenkins",
-            "job-seed"
-              ],
+              "clean-gemset",
+              "become-production-jenkins",
+              "create-new-jenkins",
+              "job-seed"
+            ],
             "global_vars": {
               "region": {
                 "Ref": "AWS::Region"
@@ -749,11 +749,11 @@
             },
             "users": [
               [
-              "admin",
-            "admin",
-            "admin"
+                "admin",
+                "admin",
+                "admin"
               ]
-              ],
+            ],
             "email": {
               "username": {
                 "Ref": "EmailUserKeys"
@@ -1029,6 +1029,9 @@
         }
         ],
         "CustomRecipes": {
+          "Setup": [
+            "rvm::system"
+          ],
           "Deploy": [
             "jenkins::server",
             "jenkins-configuration::vars",
