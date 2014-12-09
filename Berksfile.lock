@@ -1,51 +1,48 @@
-{
-  "sources": {
-    "apache2": {
-      "locked_version": "3.0.0"
-    },
-    "jenkins": {
-      "locked_version": "2.2.1"
-    },
-    "rvm": {
-      "locked_version": "0.10.1",
-      "git": "git://github.com/fnichol/chef-rvm.git",
-      "ref": "8a877e9b497f8fb06dfe6f5975561331b3924243"
-    },
-    "python": {
-      "locked_version": "1.4.6"
-    },
-    "firefox": {
-      "locked_version": "2.0.0"
-    },
-    "magic_shell": {
-      "locked_version": "1.0.0"
-    },
-    "iptables": {
-      "locked_version": "0.14.0"
-    },
-    "logrotate": {
-      "locked_version": "1.7.0"
-    },
-    "apt": {
-      "locked_version": "2.6.0"
-    },
-    "runit": {
-      "locked_version": "1.5.10"
-    },
-    "build-essential": {
-      "locked_version": "2.1.3"
-    },
-    "yum": {
-      "locked_version": "3.5.1"
-    },
-    "yum-epel": {
-      "locked_version": "0.5.3"
-    },
-    "java": {
-      "locked_version": "1.29.0"
-    },
-    "chef_gem": {
-      "locked_version": "0.1.0"
-    }
-  }
-}
+DEPENDENCIES
+  apache2
+  firefox
+  jenkins
+  magic_shell
+  python
+  rvm
+    git: git://github.com/fnichol/chef-rvm.git
+    revision: 8a877e9b497f8fb06dfe6f5975561331b3924243
+  yum (< 3.0.0)
+
+GRAPH
+  apache2 (3.0.0)
+    iptables (>= 0.0.0)
+    logrotate (>= 0.0.0)
+  apt (2.6.0)
+  build-essential (2.1.3)
+  chef_gem (0.1.0)
+  firefox (2.0.0)
+  iptables (0.14.0)
+  java (1.29.0)
+  jenkins (1.2.2)
+    apache2 (>= 0.0.0)
+    apt (>= 0.0.0)
+    iptables (>= 0.0.0)
+    java (>= 0.0.0)
+    nginx (>= 0.0.0)
+    runit (>= 1.0.0)
+    yum (>= 0.0.0)
+  logrotate (1.7.0)
+  magic_shell (1.0.0)
+  nginx (1.8.0)
+    apt (>= 0.0.0)
+    build-essential (>= 0.0.0)
+    ohai (>= 1.1.4)
+    runit (>= 0.0.0)
+    yum (>= 0.0.0)
+  ohai (2.0.1)
+  python (1.4.4)
+    build-essential (>= 0.0.0)
+    yum (>= 0.0.0)
+  runit (1.4.6)
+    build-essential (>= 0.0.0)
+    yum (< 3.0.0)
+  rvm (0.10.1)
+    chef_gem (>= 0.0.0)
+    java (>= 0.0.0)
+  yum (2.4.4)
