@@ -28,7 +28,7 @@ if node['jenkins']['http_proxy']['cas_validate_server'] == 'cas'
   apache_module 'mod_auth_cas'
 end
 
-if defined?(node['jenkins']['http_proxy']['ssl']) && node['jenkins']['http_proxy']['ssl']['enabled']
+if node['jenkins']['http_proxy']['ssl'] && node['jenkins']['http_proxy']['ssl']['enabled']
   include_recipe 'apache2::mod_ssl'
 end
 
@@ -36,7 +36,7 @@ apache_module 'proxy'
 apache_module 'proxy_http'
 apache_module 'vhost_alias'
 
-if www_redirect || (defined?(node['jenkins']['http_proxy']['ssl']) && node['jenkins']['http_proxy']['ssl']['redirect_http'])
+if www_redirect || (node['jenkins']['http_proxy']['ssl'] && node['jenkins']['http_proxy']['ssl']['redirect_http'])
   apache_module 'rewrite'
 end
 
