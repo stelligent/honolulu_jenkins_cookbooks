@@ -46,9 +46,10 @@ cookbook_file "script to add Jenkins global variables" do
   path "/tmp/create_user.groovy"
 end
 
+node.set['jenkins']['master']['endpoint'] = jenkins_url
+
 users = node["pipeline"]["users"].collect {|user| "#{user[0]} #{user[1]} #{user[2]}"}.each do |args|
   jenkins_command "add global variables" do
-    endpoint jenkins_url
     command "groovy /tmp/create_user.groovy #{args}"
   end
 end
