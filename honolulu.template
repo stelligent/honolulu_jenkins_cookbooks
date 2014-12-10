@@ -1148,7 +1148,7 @@
           "Ref": "jenkinslayer"
         }
         ],
-        "Os": "Amazon Linux",
+        "Os": "Amazon Linux 2014.09.1",
         "RootDeviceType": "ebs",
         "SshKeyName": "jeff-labs",
         "StackId": {
