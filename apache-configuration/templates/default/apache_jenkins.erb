@@ -12,7 +12,7 @@
 
 <% end -%>
 <VirtualHost *:80>
-<% if node['jenkins']['http_proxy']['ssl']['redirect_http'] -%>
+<% if node['jenkins']['http_proxy']['ssl'] && node['jenkins']['http_proxy']['ssl']['redirect_http'] -%>
   RewriteEngine On
   # rewrite non ssl -> ssl
   RewriteCond %{HTTPS} off
@@ -23,7 +23,7 @@
 
 </VirtualHost>
 
-<% if node['jenkins']['http_proxy']['ssl']['enabled'] -%>
+<% if node['jenkins']['http_proxy']['ssl'] && node['jenkins']['http_proxy']['ssl']['enabled'] -%>
 <VirtualHost *:<%= node['jenkins']['http_proxy']['ssl']['ssl_listen_ports'].join(' *:') %>>
 
 <%= render '_apache_common.erb' %>
