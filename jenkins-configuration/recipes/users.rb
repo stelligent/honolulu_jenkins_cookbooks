@@ -48,7 +48,7 @@ end
 
 users = node["pipeline"]["users"].collect {|user| "#{user[0]} #{user[1]} #{user[2]}"}.each do |args|
   jenkins_command "add global variables" do
-    url jenkins_url
+    endpoint jenkins_url
     command "groovy /tmp/create_user.groovy #{args}"
   end
 end
