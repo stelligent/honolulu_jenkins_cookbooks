@@ -40,7 +40,7 @@ if www_redirect || (node['jenkins']['http_proxy']['ssl'] && node['jenkins']['htt
   apache_module 'rewrite'
 end
 
-if false do
+if false
   template "#{node['apache']['dir']}/htpasswd" do
     variables(:username => node['jenkins']['http_proxy']['basic_auth_username'],
               :password => node['jenkins']['http_proxy']['basic_auth_password'])
