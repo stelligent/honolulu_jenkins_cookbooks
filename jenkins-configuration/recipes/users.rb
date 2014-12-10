@@ -30,6 +30,10 @@ service "jenkins" do
 end
 
 ruby_block "sleep a bit" do
+# XXX - adjust to a loop with max execution 
+# curl --connect-timeout jenkins_url | grep SomeSuccessIndicator && done
+# else sleep 10
+# loop unless failed 18 times
   block do
     sleep 180
   end
@@ -43,7 +47,7 @@ cookbook_file "script to add Jenkins global variables" do
 end
 
 users = node["pipeline"]["users"].collect {|user| "#{user[0]} #{user[1]} #{user[2]}"}.each do |args|
-  jenkins_cli "add global variables" do
+  jenkins_command "add global variables" do
     url jenkins_url
     command "groovy /tmp/create_user.groovy #{args}"
   end
