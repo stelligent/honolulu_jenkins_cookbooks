@@ -788,11 +788,11 @@
               },
               {
                 "name": "ansicolor",
-                "version": "0.3.1"
+                "version": "0.4.0"
               },
               {
                 "name": "audit-trail",
-                "version": "1.8"
+                "version": "2.1"
               },
               {
                 "name": "brakeman",
@@ -800,47 +800,47 @@
               },
               {
                 "name": "build-pipeline-plugin",
-                "version": "1.4"
+                "version": "1.4.5"
               },
               {
                 "name": "buildresult-trigger",
-                "version": "0.10"
+                "version": "0.17"
               },
               {
                 "name": "conditional-buildstep",
-                "version": "1.3.1"
+                "version": "1.3.3"
               },
               {
                 "name": "config-file-provider",
-                "version": "2.6.2"
+                "version": "2.7.5"
               },
               {
                 "name": "configurationslicing",
-                "version": "1.38.3"
+                "version": "1.40"
               },
               {
                 "name": "cucumber-reports",
-                "version": "0.0.21"
+                "version": "0.0.23"
               },
               {
                 "name": "delivery-pipeline-plugin",
-                "version": "0.8.0"
+                "version": "0.8.8"
               },
               {
                 "name": "email-ext",
-                "version": "2.35.1"
+                "version": "2.39"
               },
               {
                 "name": "envinject",
-                "version": "1.89"
+                "version": "1.90"
               },
               {
                 "name": "fstrigger",
-                "version": "0.34"
+                "version": "0.39"
               },
               {
                 "name": "git",
-                "version": "1.4.0"
+                "version": "2.3.1"
               },
               {
                 "name": "git-client",
@@ -848,27 +848,27 @@
               },
               {
                 "name": "github",
-                "version": "1.8"
+                "version": "1.10"
               },
               {
                 "name": "github-api",
-                "version": "1.44"
+                "version": "1.59"
               },
               {
                 "name": "groovy",
-                "version": "1.14"
+                "version": "1.24"
               },
               {
                 "name": "groovy-postbuild",
-                "version": "1.8"
+                "version": "2.1"
               },
               {
                 "name": "htmlpublisher",
-                "version": "1.2"
+                "version": "1.3"
               },
               {
                 "name": "ivytrigger",
-                "version": "0.26"
+                "version": "0.33"
               },
               {
                 "name": "jenkins-cloudformation-plugin",
@@ -876,7 +876,7 @@
               },
               {
                 "name": "job-dsl",
-                "version": "1.22"
+                "version": "1.27"
               },
               {
                 "name": "job-exporter",
@@ -896,19 +896,19 @@
               },
               {
                 "name": "managed-scripts",
-                "version": "1.1"
+                "version": "1.1.1"
               },
               {
                 "name": "multiple-scms",
-                "version": "0.2"
+                "version": "0.3"
               },
               {
                 "name": "parameterized-trigger",
-                "version": "2.21"
+                "version": "2.25"
               },
               {
                 "name": "postbuildscript",
-                "version": "0.14"
+                "version": "0.16"
               },
               {
                 "name": "rake",
@@ -916,7 +916,7 @@
               },
               {
                 "name": "rebuild",
-                "version": "1.21"
+                "version": "1.22"
               },
               {
                 "name": "ruby-runtime",
@@ -924,11 +924,11 @@
               },
               {
                 "name": "rubyMetrics",
-                "version": "1.5.0"
+                "version": "1.6.3"
               },
               {
                 "name": "run-condition",
-                "version": "0.10"
+                "version": "1.0"
               },
               {
                 "name": "rvm",
@@ -936,19 +936,19 @@
               },
               {
                 "name": "scripttrigger",
-                "version": "0.28"
-              },
-              {
-                "name": "token-macro",
-                "version": "1.9"
-              },
-              {
-                "name": "urltrigger",
                 "version": "0.31"
               },
               {
+                "name": "token-macro",
+                "version": "1.10"
+              },
+              {
+                "name": "urltrigger",
+                "version": "0.37"
+              },
+              {
                 "name": "ws-cleanup",
-                "version": "0.18"
+                "version": "0.24"
               },
               {
                 "name": "xtrigger",
@@ -956,7 +956,12 @@
               }
               ],
                 "install_method": "package",
-                "version": "1.567-1.1"
+                "version": "1.593-1.1"
+            }
+          },
+          "rvm": {
+            "installs": {
+              "jenkins": true
             }
           }
         },
@@ -1034,8 +1039,10 @@
         ],
         "CustomRecipes": {
           "Deploy": [
-            "rvm-keys",
-            "rvm::system",
+            "rvm-config::keys",
+            "rvm::system_install",
+            "rvm::user_install",
+            "rvm-config::rubies",
             "jenkins::master",
             "jenkins-configuration::install_plugins",
             "jenkins-configuration::vars",
