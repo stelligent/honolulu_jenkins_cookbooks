@@ -14,9 +14,9 @@
   </Proxy>
 
   ProxyPreserveHost on
-  ProxyPass         /  http://localhost:<%= node['jenkins']['server']['port'] %>/
-  ProxyPassReverse  /  http://localhost:<%= node['jenkins']['server']['port'] %>/
-  ProxyPassReverse  /  http://<%= @host_name %>/
+  ProxyPass         /  <%= node['jenkins']['master']['endpoint'] %>/
+  ProxyPassReverse  /  <%= node['jenkins']['master']['endpoint'] %>/
+  ProxyPassReverse  /  <%= node['jenkins']['master']['endpoint'] %>/
 <% node['jenkins']['http_proxy']['host_aliases'].each do |a| -%>
   ProxyPassReverse  /  http://<%= a%>
 <% end -%>
