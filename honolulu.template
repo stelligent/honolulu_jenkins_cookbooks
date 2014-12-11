@@ -1037,11 +1037,11 @@
             "rvm-keys",
             "rvm::system",
             "jenkins::master",
-            "apache-configuration::jenkins-reverseproxy",
             "jenkins-configuration::install_plugins",
             "jenkins-configuration::vars",
             "jenkins-configuration::jobs",
             "jenkins-configuration::setup_email_plugin",
+            "apache-configuration::jenkins-reverseproxy",
             "opsworks_nodejs",
             "jenkins-configuration::users"
           ]
