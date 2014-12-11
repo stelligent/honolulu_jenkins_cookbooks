@@ -4,7 +4,15 @@
 # this should get added to fnichol/chef-rvm at some point, see
 # https://github.com/fnichol/chef-rvm/issues/278
 
+cookbook_file '/etc/pki/rvm-keys.asc' do
+	owner 'root'
+	group 'root'
+	mode '0644'
+	source 'rvm-keys.asc'
+	action :create
+end
+
 execute 'Adding gpg keys' do
-	command 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3 BF04FF17'
+	command 'gpg --import /etc/pki/rvm-keys.asc'
 	only_if 'which gpg'
 end
