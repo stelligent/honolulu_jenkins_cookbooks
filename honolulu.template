@@ -777,8 +777,8 @@
               "enabled": "false"
             },
             "http_proxy": {
-              "variant": "apache2"
-
+              "variant": "apache2",
+              "host_aliases": [ "jenkins"]
             },
             "server": {
               "plugins": [
