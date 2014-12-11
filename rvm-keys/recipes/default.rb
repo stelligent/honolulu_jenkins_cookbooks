@@ -6,5 +6,5 @@
 
 execute 'Adding gpg keys' do
 	command 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3 BF04FF17'
-	only_id 'which gpg'
+	only_if 'which gpg'
 end
