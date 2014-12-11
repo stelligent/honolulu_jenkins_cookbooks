@@ -777,7 +777,8 @@
               "enabled": "false"
             },
             "http_proxy": {
-              "variant": "apache2"
+              "variant": "apache2",
+
             },
             "server": {
               "plugins": [
@@ -1033,6 +1034,7 @@
         ],
         "CustomRecipes": {
           "Deploy": [
+            "rvm-keys",
             "rvm::system",
             "jenkins::master",
             "apache-configuration::jenkins-reverseproxy",
