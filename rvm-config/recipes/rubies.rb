@@ -7,7 +7,7 @@ end
 bash "setup user rubies" do
   # use mount command and S3 bucket for azn lnx 2014.09 ruby build
   # also faster than building
-  code "rvm mount -r https://s3.amazonaws.com/StelligentLabsResources/rvm/rubies/amazon/ruby-1.9.3-p551.tar.bz2 --verify-downloads 2"
+  code ". /var/lib/jenkins/.profile; rvm mount -r https://s3.amazonaws.com/StelligentLabsResources/rvm/rubies/amazon/ruby-1.9.3-p551.tar.bz2 --verify-downloads 2"
   user 'jenkins'
 end
 
