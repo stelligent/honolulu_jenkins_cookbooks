@@ -961,7 +961,7 @@
           },
           "rvm": {
             "installs": {
-              "jenkins": "true"
+              "jenkins": {}
             }
           }
         },
