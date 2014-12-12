@@ -9,11 +9,16 @@ bash "setup user rubies" do
   # also faster than building
   cwd '/var/lib/jenkins'
   code <<-EOH
+  export USER=jenkins
+  export USERNAME=jenkins
+  export HOME=/var/lib/jenkins
+  export LOGNAME=jenkins
   . .rvmrc
   . .profile
   env
-  ./.rvm/bin/rvm mount -r https://s3.amazonaws.com/StelligentLabsResources/rvm/rubies/amazon/ruby-1.9.3-p551.tar.bz2 --verify-downloads 2"
+  ./.rvm/bin/rvm mount -r https://s3.amazonaws.com/StelligentLabsResources/rvm/rubies/amazon/ruby-1.9.3-p551.tar.bz2 --verify-downloads 2
   EOH
+  evironment { "USER"=> "jenkins"}
   user 'jenkins'
 end
 
