@@ -12,7 +12,13 @@ cookbook_file '/etc/pki/rvm-keys.asc' do
 	action :create
 end
 
-execute 'Adding gpg keys' do
+execute 'Add system gpg keys' do
 	command 'gpg --import /etc/pki/rvm-keys.asc'
 	only_if 'which gpg'
+end
+
+execute 'Add jenkins user gpg keys' do	
+	command 'gpg --import /etc/pki/rvm-keys.asc'
+	only_if 'which gpg'
+	user 'jenkins'
 end
