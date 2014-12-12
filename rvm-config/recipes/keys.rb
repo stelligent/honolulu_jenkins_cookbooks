@@ -18,7 +18,7 @@ execute 'Add system gpg keys' do
 end
 
 execute 'Add jenkins user gpg keys' do	
-	command 'gpg --homedir /var/lib/jenkins --import /etc/pki/rvm-keys.asc'
+	command 'gpg --homedir /var/lib/jenkins/.gnupg --import /etc/pki/rvm-keys.asc'
 	only_if 'which gpg'
 	user 'jenkins'
 end
