@@ -769,6 +769,33 @@
               }
             }
           },
+          "apache": {
+            "default_modules": [
+              "alias",
+              "auth_basic",
+              "authn_file",
+              "authz_default",
+              "authz_groupfile",
+              "authz_host",
+              "authz_user",
+              "autoindex",
+              "deflate",
+              "dir",
+              "env",
+              "headers",
+              "log_config",
+              "logio",
+              "mime",
+              "negotiation",
+              "proxy_http",
+              "proxy",
+              "rewrite",
+              "setenvif",
+              "status",
+              "vhost_alias"
+            ]
+
+          },
           "jenkins": {
             "master": {
               "install_method": "package"
