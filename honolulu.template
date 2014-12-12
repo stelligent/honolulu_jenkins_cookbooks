@@ -1039,11 +1039,11 @@
         ],
         "CustomRecipes": {
           "Deploy": [
+            "jenkins::master",
             "rvm-config::keys",
             "rvm::system_install",
             "rvm::user_install",
-            "rvm-config::rubies",
-            "jenkins::master",
+            "rvm-config::rubies",            
             "jenkins-configuration::install_plugins",
             "jenkins-configuration::vars",
             "jenkins-configuration::jobs",
