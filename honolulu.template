@@ -1041,6 +1041,7 @@
           "Deploy": [
             "jenkins::master",
             "rvm-config::keys",
+            "rvm-config::permissions",
             "rvm::system_install",
             "rvm::user_install",
             "rvm-config::rubies",            
