@@ -20,9 +20,5 @@ end
 
 # from the jenkins cookbook library, wait until Jenkins is
 # back up
-ruby_block 'wait-until-jenkins-listening' do
-	block do
-		include Jenkins::Helper
-		executor.wait_until_ready!
-	end
-end
+extend ::Jenkins::Helper
+wait_until_ready!
