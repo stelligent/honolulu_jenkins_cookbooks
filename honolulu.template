@@ -976,6 +976,10 @@
               {
                 "name": "ws-cleanup",
                 "version": "0.24"
+              },
+              {
+                "name": "xtrigger",
+                "version": "0.54"
               }
               ],
                 "install_method": "package",
