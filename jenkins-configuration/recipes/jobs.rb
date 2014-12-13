@@ -44,5 +44,5 @@ params.each do |param|
 end
 
 execute 'start job-seed' do
-  command 'curl -X POST http://localhost:8080/job/job-seed/build -d token=5a6ee9d0e05f2521d618501f9b88f637 --data-urlencode'
+  command 'curl -X POST http://localhost:8080/job/job-seed/build -d token=5a6ee9d0e05f2521d618501f9b88f637'
 end
