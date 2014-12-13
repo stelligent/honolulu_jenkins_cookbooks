@@ -21,3 +21,4 @@
 #THE SOFTWARE.
 
 depends 'magic_shell'
+depends 'jenkins', '> 2.0'
