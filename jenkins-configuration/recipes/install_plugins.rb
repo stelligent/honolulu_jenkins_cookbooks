@@ -7,3 +7,22 @@ node['jenkins']['server']['plugins'].each do |plugin|
     install_deps false
   end
 end
+
+# we update some plugins and that won't be picked up until
+# a restart. Let's do so
+jenkins_command 'restart'
+
+# wait 10 seconds for jenkins to stop responding on its
+# listener
+execute 'wait for jenkins to shut down' do
+	command "sleep 10"
+end
+
+# from the jenkins cookbook library, wait until Jenkins is
+# back up
+ruby_block 'wait-until-jenkins-listening' do
+	block do
+		include Jenkins::Helper
+		executor.wait_until_ready!
+	end
+end
