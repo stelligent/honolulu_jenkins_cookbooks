@@ -8,14 +8,10 @@ node['jenkins']['server']['plugins'].each do |plugin|
   end
 end
 
-# we update some plugins and that won't be picked up until
-# a restart. Let's do so
-jenkins_command 'restart'
-
 # wait 10 seconds for jenkins to stop responding on its
 # listener
-execute 'wait for jenkins to shut down' do
-	command "sleep 10"
+execute 'wait for jenkins to restart' do
+	command "service jenkins restart;sleep 10"
 end
 
 # from the jenkins cookbook library, wait until Jenkins is
