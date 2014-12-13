@@ -960,7 +960,7 @@
               {
                 "name": "maven-plugin",
                 "version": "2.8"
-              }
+              },
               {
                 "name": "multiple-scms",
                 "version": "0.3"
