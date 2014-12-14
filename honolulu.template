@@ -797,6 +797,9 @@
 
           },
           "jenkins": {
+            "executor": {
+              "timeout": "120"
+            },
             "master": {
               "install_method": "package"
             },
