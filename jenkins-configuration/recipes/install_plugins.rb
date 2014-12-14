@@ -14,6 +14,4 @@ execute 'wait for jenkins to restart' do
 	command "service jenkins restart;sleep 10"
 end
 
-node.set['jenkins']['executor']['timeout'] ||= 120
-
 jenkins_command 'version'
