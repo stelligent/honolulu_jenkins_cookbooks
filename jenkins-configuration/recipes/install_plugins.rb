@@ -14,7 +14,6 @@ execute 'wait for jenkins to restart' do
 	command "service jenkins restart;sleep 10"
 end
 
-# from the jenkins cookbook library, wait until Jenkins is
-# back up
-extend ::Jenkins::Helper
-wait_until_ready!
+node.set['jenkins']['executor']['timeout'] ||= 120
+
+jenkins_command 'version'
