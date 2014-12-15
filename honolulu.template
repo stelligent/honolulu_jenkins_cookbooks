@@ -1006,12 +1006,16 @@
                 "version": "0.4"
               },
               {
-                "name": "scripttrigger",
-                "version": "0.31"
-              },
-              {
                 "name": "scm-api",
                 "version": "0.2"
+              },
+              {
+                "name": "script-security",
+                "version": "1.12"
+              },
+              {
+                "name": "scripttrigger",
+                "version": "0.31"
               },
               {
                 "name": "subversion",
