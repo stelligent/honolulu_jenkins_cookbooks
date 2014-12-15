@@ -73,11 +73,3 @@ template "/var/lib/jenkins/hudson.plugins.emailext.ExtendedEmailPublisher.xml" d
     }
   )
 end
-
-ruby_block "Log for setup_email_plugin recipe" do
-  block do
-    dirll = `/bin/ls -al /var/lib/jenkins/plugins`
-    Chef::Log.warn("Directory for post-setup_email_plugin plugins: #{dirll}")
-  end
-  action :create
-end
