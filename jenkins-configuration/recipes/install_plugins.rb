@@ -9,10 +9,12 @@ node['jenkins']['server']['plugins'].each do |plugin|
     version plugin['version'] unless plugin['version'].nil?
     install_deps false
   end
-  log "Log for #{plugin['name']}" do
-  	dirll = `/bin/ls -al /var/lib/jenkins/plugins`
-  	message "Directory for #{plugin['name']}: #{dirll}"
-  	level :warn
+  ruby_block "Log for #{plugin['name']}" do
+  	block do
+  		dirll = `/bin/ls -al /var/lib/jenkins/plugins`
+  		Chef::Log.warn("Directory for #{plugin['name']}: #{dirll}")
+  	end
+  	action :create
   end
 end
 
