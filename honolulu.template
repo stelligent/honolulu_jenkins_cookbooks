@@ -1133,10 +1133,10 @@
             "rvm::user_install",
             "rvm-config::rubies",            
             "apache-configuration::jenkins-reverseproxy",
-            "jenkins-configuration::install_plugins",
             "jenkins-configuration::vars",
-            "jenkins-configuration::jobs",
+            "jenkins-configuration::install_plugins",
             "jenkins-configuration::setup_email_plugin",
+            "jenkins-configuration::jobs",
             "opsworks_nodejs",
             "jenkins-configuration::users"
           ]
