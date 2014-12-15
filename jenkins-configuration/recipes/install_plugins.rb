@@ -9,6 +9,11 @@ node['jenkins']['server']['plugins'].each do |plugin|
     version plugin['version'] unless plugin['version'].nil?
     install_deps false
   end
+  log "Log for #{plugin['name']}" do
+  	dirll = `ls -al /var/lib/jenkins/plugins`
+  	message "#{dirll}"
+  	level :warn
+  end
 end
 
 # wait 10 seconds for jenkins to stop responding on its
