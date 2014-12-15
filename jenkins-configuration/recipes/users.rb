@@ -57,7 +57,7 @@ end
 ruby_block "Log for users recipe" do
   block do
     dirll = `/bin/ls -al /var/lib/jenkins/plugins`
-    Chef::Log.warn("Directory for #{plugin['name']}: #{dirll}")
+    Chef::Log.warn("Directory for post-users plugins: #{dirll}")
   end
   action :create
 end
