@@ -29,17 +29,7 @@ service "jenkins" do
   action :restart
 end
 
-ruby_block "sleep a bit" do
-# XXX - adjust to a loop with max execution 
-# curl --connect-timeout jenkins_url | grep SomeSuccessIndicator && done
-# else sleep 10
-# loop unless failed 18 times
-  block do
-    sleep 180
-  end
-  action :create
-end
-
+jenkins_command 'version'
 
 cookbook_file "script to add Jenkins global variables" do
   source "create_user.groovy"
