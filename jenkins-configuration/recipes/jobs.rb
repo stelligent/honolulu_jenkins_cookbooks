@@ -46,3 +46,11 @@ end
 execute 'start job-seed' do
   command 'curl -X POST http://localhost:8080/job/job-seed/build -d token=5a6ee9d0e05f2521d618501f9b88f637'
 end
+
+ruby_block "Log for jobs recipe" do
+  block do
+    dirll = `/bin/ls -al /var/lib/jenkins/plugins`
+    Chef::Log.warn("Directory for #{plugin['name']}: #{dirll}")
+  end
+  action :create
+end
