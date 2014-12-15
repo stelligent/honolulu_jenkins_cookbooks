@@ -37,11 +37,3 @@ bash 'setup profile.d for jenkins user' do
     echo source /etc/profile >> /etc/sysconfig/jenkins
   END
 end
-
-ruby_block "Log for vars recipe" do
-	block do
-		dirll = `/bin/ls -al /var/lib/jenkins/plugins`
-		Chef::Log.warn("Directory for post-vars plugins: #{dirll}")
-	end
-	action :create
-end
