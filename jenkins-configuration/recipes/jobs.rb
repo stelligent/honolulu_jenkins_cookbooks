@@ -42,7 +42,3 @@ params.each do |param|
   end
 
 end
-
-jenkins_command 'start job-seed' do
-  command 'build job-seed'
-end
