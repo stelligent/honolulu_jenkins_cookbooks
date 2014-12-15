@@ -9,6 +9,12 @@ node['jenkins']['server']['plugins'].each do |plugin|
     version plugin['version'] unless plugin['version'].nil?
     install_deps false
   end
+  file "/var/lib/jenkins/plugins/#{plugin['name']}.pinned" do
+  	action :create
+  	owner 'jenkins'
+  	group 'jenkins'
+  	mode '0644'
+  end
   ruby_block "Log for #{plugin['name']}" do
   	block do
   		dirll = `/bin/ls -al /var/lib/jenkins/plugins`
