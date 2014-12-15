@@ -7,6 +7,7 @@ node['jenkins']['server']['plugins'].each do |plugin|
   end
   jenkins_plugin plugin['name'] do
     version plugin['version'] unless plugin['version'].nil?
+    install_deps false
   end
   file "/var/lib/jenkins/plugins/#{plugin['name']}.jpi.pinned" do
   	action :create
