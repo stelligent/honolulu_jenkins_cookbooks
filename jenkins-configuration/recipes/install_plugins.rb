@@ -25,3 +25,11 @@ execute 'wait for jenkins to restart' do
 end
 
 jenkins_command 'version'
+
+ruby_block "Log for post-install_plugins recipe" do
+  block do
+    dirll = `/bin/ls -al /var/lib/jenkins/plugins`
+    Chef::Log.warn("Directory for post-install_plugins plugins: #{dirll}")
+  end
+  action :create
+end
