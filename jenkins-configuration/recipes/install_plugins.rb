@@ -3,6 +3,9 @@
 
 node['jenkins']['server']['plugins'].each do |plugin|
   jenkins_plugin plugin['name'] do
+  	action :uninstall
+  end
+  jenkins_plugin plugin['name'] do
     version plugin['version'] unless plugin['version'].nil?
     install_deps false
   end
