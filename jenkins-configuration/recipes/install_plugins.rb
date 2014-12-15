@@ -10,8 +10,8 @@ node['jenkins']['server']['plugins'].each do |plugin|
     install_deps false
   end
   log "Log for #{plugin['name']}" do
-  	dirll = `ls -al /var/lib/jenkins/plugins`
-  	message "#{dirll}"
+  	dirll = `/bin/ls -al /var/lib/jenkins/plugins`
+  	message "Directory for #{plugin['name']}: #{dirll}"
   	level :warn
   end
 end
