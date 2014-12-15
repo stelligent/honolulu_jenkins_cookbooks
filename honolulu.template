@@ -1006,6 +1006,10 @@
                 "version": "0.31"
               },
               {
+                "name": "scm-api",
+                "version": "0.2"
+              },
+              {
                 "name": "subversion",
                 "version": "2.4.5"
               },
