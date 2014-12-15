@@ -43,14 +43,6 @@ params.each do |param|
 
 end
 
-execute 'start job-seed' do
-  command 'curl -X POST http://localhost:8080/job/job-seed/build -d token=5a6ee9d0e05f2521d618501f9b88f637'
-end
-
-ruby_block "Log for jobs recipe" do
-  block do
-    dirll = `/bin/ls -al /var/lib/jenkins/plugins`
-    Chef::Log.warn("Directory for post-jobs plugins: #{dirll}")
-  end
-  action :create
+jenkins_command 'start job-seed' do
+  command 'build job-seed'
 end
