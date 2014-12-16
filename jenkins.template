@@ -14,7 +14,7 @@
         },
         "domain": {
             "Type": "String",
-            "Description": "The Route 53 Hosted Zone to look for resource records. For example, if you want the Jenkins server to populate 'appdemo.stelligent.com', the entry for this field should be 'stelligent.com'"
+            "Description": "The Route 53 Hosted Zone to look for resource records. For example, if you want the Jenkins server to populate 'appdemo.elasticoperations.com', the entry for this field should be 'elasticoperations.com'"
         },
         "adminEmailAddress": {
             "Type": "String",
