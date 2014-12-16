@@ -1247,7 +1247,6 @@
         ],
         "Os": "Amazon Linux 2014.09",
         "RootDeviceType": "ebs",
-        "SshKeyName": "jeff-labs",
         "StackId": {
           "Ref": "jenkinsstack"
         }
