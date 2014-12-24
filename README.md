@@ -3,7 +3,7 @@ honolulu_jenkins_cookbooks
 
 A collection of cookbooks and configuration used to set up a Jenkins server for the Honolulu application. You can point to this repo with OpsWorks if you want to create a custom Jenkins layer.
 
-Most of these cookbooks are just copies of open source cookbooks. They were retrieved using berkshelf, since it makes everything way easier. If you need to update the open source cookbooks, it's simple enough; just add the new dependency to Berksfile, and then run these commands:
+These cookbooks reference open source cookbooks that are managed using berkshelf, since it makes everything way easier. If you need to update the open source cookbooks, it's simple enough; just add the new dependency to Berksfile, and then run these commands:
 
 ```
 gem install bundler
@@ -16,12 +16,14 @@ OpsWorks is configured via CloudFormation to use berkshelf natively, so it is no
 ---
 
 The custom cookbooks are as follows:
-* jenkins-configuration: cookbooks to configure Jenkins jobs, views, etc.
+* apache-configuration: recipes to configure Apache proxies in front of Jenkins
+* jenkins-configuration: recipes to configure Jenkins jobs, views, etc.
+* rvm-config: recipes to perform post-install RVM configuration
 
 how to use this repository
 ======================
 
-This repository is designed to be used as the custom Chef cookbooks repository for a Jenkins stack built using Amazon's OpsWorks service. I suppose you could use it to build a custom Jenkins server without using OpsWorks, but I haven't tried that so if you give it a shot you're on your own. :)
+This repository is designed to be used as the custom Chef cookbooks repository for a Jenkins stack built using Amazon's OpsWorks service.
 
 We've designed the infrastructure for Honolulu Answers, as well as the Jenkins server, to be run in a VPC.
 
@@ -62,8 +64,8 @@ The Jenkins template also supports two other optional parameters: _repository_ a
 * Click "configure"
 * Punch in your new password in the password fields and click save.
 
-how to update jenkins configuration:
-====
+Updating Jenkins Configuration
+==============================
 
 If you've made changes to the Jenkins server configuration, it will not be persisted if the server goes down. If you'd like to commit that configuration to a source control repo, fork this repo and look in the jenkins-configuration cookbook. In there you will find various ERB template files, each full of XML. These are the raw Jenkins configuration files. You can find this XML by configuring the jobs on the Jenkins server, and then changing the URL. The Jenkins job configure URL will end in /jobname/configure; if you go to /jobname/config.xml you'll see the pure XML. 
 
@@ -80,8 +82,8 @@ If you like what you see, you can commit the changes.
 
 **Note**: The groovy scripts that inject the job configuration will crash and burn if there is any whitespace at the beginning of the file. Make sure that there isn't any whitespace at the beginning of the the XML configuration file. 
 
-how to push a new version of jenkins out to the world
-====
+Pushing Jenkins changes to production
+=====================================
 
 Most of the job knowledge is stored in scripts that are stored in the application repository, but if you create or delete jobs, or make configuration changes to the jobs (...which really shouldn't be necessary!) you may need to push a new Jenkins out to the world.
 
@@ -94,8 +96,8 @@ The two jobs in question are:
 
 Then, when you need a new Jenkins, just run the create-new-jenkins job. Once it completes, go into the OpsWorks console to find your new stack, open it up, and then run the become-production-jenkins job on that server and it'll become the new production instance.
 
-questions?
-====
+Questions?
+==========
 If you have any issues, feel free to open an issue or make a pull request. Alternatively, you can reach out on twitter: @jonathansywulak
 
 :books: 
