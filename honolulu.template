@@ -702,7 +702,7 @@
           "Version": "11.10"
         },
         "CustomCookbooksSource": {
-          "Revision" : "vpc-rewrite",
+          "Revision" : "master",
           "Type": "git",
           "Url": "https://github.com/stelligent/honolulu_jenkins_cookbooks.git"
         },
