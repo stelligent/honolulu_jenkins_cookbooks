@@ -92,11 +92,11 @@ end
 
 # using trollop to do command line options
 opts = Trollop::options do
-  opt :region, 'The AWS region to use', :type => String, :default => "us-west-2"
-  opt :keyname, 'The EC2 keypair to use on the instances created', :type => String, :required => true
-  opt :domain, 'The Route 53 Hosted Zone that the Jenkins server will deploy to', :type => String, :default => "example.com"
-  opt :email, 'The Admin email address', :type => String, :default => "jonny@stelligent.com"
-  opt :opsworks, 'Use OpsWorks', :type => Boolean, :default => true
+  opt :region, 'The AWS region to use', :type => :string, :default => "us-west-2"
+  opt :keyname, 'The EC2 keypair to use on the instances created', :type => :string, :required => true
+  opt :domain, 'The Route 53 Hosted Zone that the Jenkins server will deploy to', :type => :string, :default => "example.com"
+  opt :email, 'The Admin email address', :type => :string, :default => "jonny@stelligent.com"
+  opt :opsworks, 'Use OpsWorks', :type => :boolean, :default => true
 end
 
 puts "You're creating a Honolulu Answers VPC and Jenkins instance in the #{opts[:region]} region."
