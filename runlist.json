@@ -1,0 +1,17 @@
+{
+    "run_list": [
+        "recipe[jenkins::master]",
+        "recipe[rvm-config::keys]",
+        "recipe[rvm-config::permissions]",
+        "recipe[rvm::system_install]",
+        "recipe[rvm::user_install]",
+        "recipe[rvm-config::rubies]",
+        "recipe[apache-configuration::jenkins-reverseproxy]",
+        "recipe[jenkins-configuration::vars]",
+        "recipe[jenkins-configuration::install_plugins]",
+        "recipe[jenkins-configuration::setup_email_plugin]",
+        "recipe[jenkins-configuration::jobs]",
+        "recipe[opsworks_nodejs]",
+        "recipe[jenkins-configuration::users]"
+    ]
+}
