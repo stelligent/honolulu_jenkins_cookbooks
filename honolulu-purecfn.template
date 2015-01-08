@@ -1,0 +1,1625 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation Template: Launches Honolulu VPC and instances",
+  "Parameters": {
+    "KeyName": {
+      "Description": "Name of an existing EC2 KeyPair to enable SSH access to the bastion host",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "255",
+      "AllowedPattern": "[\\x20-\\x7E]*",
+      "ConstraintDescription": "can contain only ASCII characters."
+    },
+    "repository": {
+      "Type": "String",
+      "Default": "https://github.com/stelligent/honolulu_answers.git",
+      "Description": "The github repository where you code is stored. Note: this repoistory must be public."
+    },
+    "branch": {
+      "Type": "String",
+      "Default": "master",
+      "Description": "The git branch of the repository you'd like Jenkins to be configured to look at."
+    },
+    "domain": {
+      "Type": "String",
+      "Description": "The Route 53 Hosted Zone to look for resource records. For example, if you want the Jenkins server to populate 'appdemo.elasticoperations.com', the entry for this field should be 'elasticoperations.com'"
+    },
+    "adminEmailAddress": {
+      "Type": "String",
+      "Description": "The address that Jenkins failure notices should come from."
+    }
+  },
+  "Mappings": {
+    "SubnetAZ": {
+      "us-east-1": {
+        "Public1": "us-east-1c",
+        "Private1": "us-east-1c",
+        "Private2": "us-east-1d"
+      },
+      "us-west-1": {
+        "Public1": "us-west-1a",
+        "Private1": "us-west-1a",
+        "Private2": "us-west-1c"
+      },
+      "us-west-2": {
+        "Public1": "us-west-2a",
+        "Private1": "us-west-2a",
+        "Private2": "us-west-2b"
+      },
+      "eu-west-1": {
+        "Public1": "eu-west-1a",
+        "Private1": "eu-west-1a",
+        "Private2": "eu-west-1b"
+      },
+      "ap-southeast-1": {
+        "Public1": "ap-southeast-1a",
+        "Private1": "ap-southeast-1a",
+        "Private2": "ap-southeast-1b"
+      },
+      "ap-northeast-1": {
+        "Public1": "ap-northeast-1a",
+        "Private1": "ap-northeast-1a",
+        "Private2": "ap-northeast-1b"
+      },
+      "ap-southeast-2": {
+        "Public1": "ap-southeast-2a",
+        "Private1": "ap-southeast-2a",
+        "Private2": "ap-southeast-2b"
+      },
+      "sa-east-1": {
+        "Public1": "sa-east-1a",
+        "Private1": "sa-east-1a",
+        "Private2": "sa-east-1b"
+      }
+    },
+    "AWSNATAMI": {
+      "us-east-1": {
+        "AMI": "ami-224dc94a"
+      },      
+      "us-west-1": {
+        "AMI": "ami-838396c6"
+      },
+      "us-west-2": {
+        "AMI": "ami-030f4133"
+      },
+      "eu-west-1": {
+        "AMI": "ami-30913f47"
+      },
+      "ap-southeast-1": {
+        "AMI": "ami-70a38222"
+      },
+      "ap-southeast-2": {
+        "AMI": "ami-39d3be03"
+      },
+      "ap-northeast-1": {
+        "AMI": "ami-11d6e610"
+      },
+      "sa-east-1": {
+        "AMI": "ami-9122968c"
+      }
+    },
+    "SubnetConfig": {
+      "VPC": {
+        "CIDR": "10.0.0.0/16"
+      },
+      "Public": {
+        "CIDR": "10.0.0.0/24"
+      },
+      "PrivateA": {
+        "CIDR": "10.0.1.0/24"
+      },
+      "PrivateB": {
+        "CIDR": "10.0.2.0/24"
+      }
+    }
+  },
+  "Resources": {
+    "VPC": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": {
+          "Fn::FindInMap": [
+            "SubnetConfig",
+          "VPC",
+          "CIDR"
+            ]
+        },
+        "Tags": [
+        {
+          "Key": "StackName",
+          "Value": {
+            "Ref": "AWS::StackName"
+          }
+        },
+        {
+          "Key": "Network",
+          "Value": "Public"
+        }
+        ]
+      }
+    },
+    "PublicSubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone" : { "Fn::FindInMap": [ "SubnetAZ", { "Ref" : "AWS::Region" }, "Public1" ] },
+        "CidrBlock": {
+          "Fn::FindInMap": ["SubnetConfig", "Public", "CIDR"]
+        },
+        "Tags": [
+        {
+          "Key": "Stackname",
+          "Value": {
+            "Ref": "AWS::StackName"
+          }
+        },
+        {
+          "Key": "Name",
+          "Value": "Public"
+        }
+        ]
+      }
+    },
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+        {
+          "Key": "Application",
+          "Value": {
+            "Ref": "AWS::StackName"
+          }
+        },
+        {
+          "Key": "Network",
+          "Value": "Public"
+        }
+        ]
+      }
+    },
+    "VPCGatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "InternetGatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "PublicRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+        {
+          "Key": "StackName",
+          "Value": {
+            "Ref": "AWS::StackName"
+          }
+        },
+        {
+          "Key": "Network",
+          "Value": "Public"
+        }
+        ]
+      }
+    },
+    "PublicRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "VPCGatewayAttachment",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "PublicSubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PublicSubnet"
+        },
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        }
+      }
+    },
+    "PublicNetworkAcl": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+        {
+          "Key": "StackName",
+          "Value": {
+            "Ref": "AWS::StackName"
+          }
+        },
+        {
+          "Key": "Network",
+          "Value": "Public"
+        }
+        ]
+      }
+    },
+    "InboundHTTPPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "100",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "80",
+          "To": "80"
+        }
+      }
+    },
+    "InboundHTTPSPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "101",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "443",
+          "To": "443"
+        }
+      }
+    },
+    "InboundSSHPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "102",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "22",
+          "To": "22"
+        }
+      }
+    },
+    "InboundEmphemeralPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "103",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "0",
+          "To": "65535"
+        }
+      }
+    },
+    "OutboundPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "100",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "true",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "0",
+          "To": "65535"
+        }
+      }
+    },
+    "PublicSubnetNetworkAclAssociation": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PublicSubnet"
+        },
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        }
+      }
+    },
+    "PrivateSubnetA": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone" : { "Fn::FindInMap": [ "SubnetAZ", { "Ref" : "AWS::Region" }, "Private1" ] },
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "CidrBlock": {
+          "Fn::FindInMap": [
+            "SubnetConfig",
+          "PrivateA",
+          "CIDR"
+            ]
+        },
+        "Tags": [
+        {
+          "Key": "StackName",
+          "Value": {
+            "Ref": "AWS::StackName"
+          }
+        },
+        {
+          "Key": "Name",
+          "Value": "Private Subnet A"
+        }
+        ]
+      }
+    },
+    "PrivateSubnetB": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone" : { "Fn::FindInMap": [ "SubnetAZ", { "Ref" : "AWS::Region" }, "Private2" ] },
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "CidrBlock": {
+          "Fn::FindInMap": [
+            "SubnetConfig",
+          "PrivateB",
+          "CIDR"
+            ]
+        },
+        "Tags": [
+        {
+          "Key": "StackName",
+          "Value": {
+            "Ref": "AWS::StackName"
+          }
+        },
+        {
+          "Key": "Name",
+          "Value": "Private Subnet B"
+        }
+        ]
+      }
+    },
+    "PrivateRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+        {
+          "Key": "StackName",
+          "Value": {
+            "Ref": "AWS::StackName"
+          }
+        },
+        {
+          "Key": "Network",
+          "Value": "Private"
+        }
+        ]
+      }
+    },
+    "PrivateSubnetRouteTableAssociationA": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnetA"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "PrivateSubnetRouteTableAssociationB": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnetB"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "PrivateRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "InstanceId": {
+          "Ref": "NATDevice"
+        }
+      }
+    },
+    "PrivateNetworkAcl": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+        {
+          "Key": "StackName",
+          "Value": {
+            "Ref": "AWS::StackName"
+          }
+        },
+        {
+          "Key": "Network",
+          "Value": "Private"
+        }
+        ]
+      }
+    },
+    "InboundPrivateNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PrivateNetworkAcl"
+        },
+        "RuleNumber": "100",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "0",
+          "To": "65535"
+        }
+      }
+    },
+    "OutBoundPrivateNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PrivateNetworkAcl"
+        },
+        "RuleNumber": "100",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "true",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "0",
+          "To": "65535"
+        }
+      }
+    },
+    "PrivateSubnetNetworkAclAssociationA": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnetA"
+        },
+        "NetworkAclId": {
+          "Ref": "PrivateNetworkAcl"
+        }
+      }
+    },
+    "PrivateSubnetNetworkAclAssociationB": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnetB"
+        },
+        "NetworkAclId": {
+          "Ref": "PrivateNetworkAcl"
+        }
+      }
+    },
+    "NATIPAddress": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "InstanceId": {
+          "Ref": "NATDevice"
+        }
+      }
+    },
+    "NATDevice": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": "m1.small",
+        "SubnetId": {
+          "Ref": "PublicSubnet"
+        },
+        "SourceDestCheck": "false",
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSNATAMI",
+          {
+            "Ref": "AWS::Region"
+          },
+          "AMI"
+            ]
+        },
+        "KeyName": {
+          "Ref": "KeyName"
+        },
+        "SecurityGroupIds": [
+        {
+          "Ref": "NATSecurityGroup"
+        }
+        ],
+          "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [ { "Ref": "AWS::StackName" }, " - NAT Device" ] ] }
+          }
+        ]
+      }
+    },
+    "NATSecurityGroup" : {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Enable internal access to the NAT device",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+
+
+        "SecurityGroupIngress": [
+        {"IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "0.0.0.0/0"},
+        {"IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "0.0.0.0/0"},
+        {"IpProtocol": "tcp", "FromPort": "443", "ToPort": "443", "CidrIp": "0.0.0.0/0"},
+        {"IpProtocol": "tcp", "FromPort": "587", "ToPort": "587", "CidrIp": "0.0.0.0/0"},
+        {"IpProtocol": "tcp", "FromPort": "5432", "ToPort": "5432", "CidrIp": "0.0.0.0/0"},
+        {"IpProtocol": "tcp", "FromPort": "9418", "ToPort": "9418", "CidrIp": "0.0.0.0/0"}
+        ],
+          "SecurityGroupEgress": [
+          {"IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "0.0.0.0/0"},
+          {"IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "0.0.0.0/0"},
+          {"IpProtocol": "tcp", "FromPort": "443", "ToPort": "443", "CidrIp": "0.0.0.0/0"},
+          {"IpProtocol": "tcp", "FromPort": "587", "ToPort": "587", "CidrIp": "0.0.0.0/0"},
+          {"IpProtocol": "tcp", "FromPort": "5432", "ToPort": "5432", "CidrIp": "0.0.0.0/0"},
+          {"IpProtocol": "tcp", "FromPort": "9418", "ToPort": "9418", "CidrIp": "0.0.0.0/0"}
+        ]
+      }
+    },
+    "BastionIPAddress": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "InstanceId": {
+          "Ref": "BastionHost"
+        }
+      }
+    },
+    "BastionHost": {
+      "Type": "AWS::EC2::Instance",
+      "Metadata" : {
+        "AWS::CloudFormation::Init" : {
+          "config" : {
+            "commands" : {
+              "00-security-update" : {
+                 "command" : "yum -y update --security",
+                 "ignoreErrors" : "true"
+              }
+            }
+          }
+        }
+      },
+      "Properties": {
+        "KeyName": {
+          "Ref": "KeyName"
+        },
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSNATAMI",
+            { "Ref": "AWS::Region" },
+            "AMI"
+          ]
+        },
+        "InstanceType": "t1.micro",
+        "SecurityGroupIds": [
+          { "Ref": "BastionSecurityGroup" }
+        ],
+        "SubnetId": {
+          "Ref": "PublicSubnet"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [ { "Ref": "AWS::StackName" }, " - Bastion Host" ] ] }
+          }
+        ],
+        "UserData": { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+          "yum update -y aws-cfn-bootstrap\n",
+          "/opt/aws/bin/cfn-init -v -s ", { "Ref" : "AWS::StackId" }, " -r BastionHost ",
+          "         --region ", { "Ref" : "AWS::Region" }, "\n",
+          "/opt/aws/bin/cfn-signal -e $? '", { "Ref" : "BastionWaitHandle" }, "'\n"
+        ]]}}
+      }
+    },
+    "BastionSecurityGroup": {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Enable internal access to the NAT device",
+        "VpcId" : { "Ref" : "VPC" },
+        "SecurityGroupIngress" : [
+        { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "0.0.0.0/0" },
+        { "IpProtocol" : "tcp", "FromPort" : "80",  "ToPort" : "80",  "CidrIp" : "0.0.0.0/0" },
+        { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" } ],
+        "SecurityGroupEgress" : [
+        { "IpProtocol" : "tcp", "FromPort" : "22",  "ToPort" : "22",  "CidrIp" : "0.0.0.0/0" } ,
+        { "IpProtocol" : "tcp", "FromPort" : "80",  "ToPort" : "80",  "CidrIp" : "0.0.0.0/0" } ,
+        { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" } ]
+      }
+    },
+    "BastionWaitCondition": {
+      "Type" : "AWS::CloudFormation::WaitCondition",
+      "DependsOn" : "BastionHost",
+      "Properties" : {
+        "Handle" : {"Ref" : "BastionWaitHandle"},
+        "Timeout" : "2400"
+      }
+    },
+    "BastionWaitHandle": {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle"
+    },
+    "JenkinsSdbDomain": {
+      "Type": "AWS::SDB::Domain"
+    },
+    "jenkinsstack": {
+      "Type": "AWS::OpsWorks::Stack",
+      "Properties": {
+        "ChefConfiguration": {
+          "BerkshelfVersion": "3.1.3",
+          "ManageBerkshelf": true
+        },
+        "ConfigurationManager": {
+          "Name": "Chef",
+          "Version": "11.10"
+        },
+        "CustomCookbooksSource": {
+          "Revision" : "master",
+          "Type": "git",
+          "Url": "https://github.com/stelligent/honolulu_jenkins_cookbooks.git"
+        },
+        "CustomJson": {
+          "pipeline": {
+            "source": {
+              "Ref": "repository"
+            },
+            "branch": {
+              "Ref": "branch"
+            },
+            "jobs": [
+              "jenkins-test",
+              "clean-gemset",
+              "become-production-jenkins",
+              "create-new-jenkins",
+              "job-seed"
+            ],
+            "global_vars": {
+              "region": {
+                "Ref": "AWS::Region"
+              },
+              "sdb_domain": {
+                "Ref": "JenkinsSdbDomain"
+              },
+              "domain": {
+                "Ref": "domain"
+              },
+              "name_of_jenkins_stack": {
+                "Ref": "AWS::StackName"
+              },
+              "vpc": {
+                "Ref": "VPC"
+              },
+              "publicSubnet": {
+                "Ref": "PublicSubnet"
+              },
+              "privateSubnetA": {
+                "Ref": "PrivateSubnetA"
+              },
+              "privateSubnetB": {
+                "Ref": "PrivateSubnetB"
+              }
+            },
+            "users": [
+              [
+                "admin",
+                "admin",
+                "admin"
+              ]
+            ],
+            "email": {
+              "username": {
+                "Ref": "EmailUserKeys"
+              },
+              "secret_key": {
+                "Fn::GetAtt": [
+                  "EmailUserKeys",
+                "SecretAccessKey"
+                  ]
+              },
+              "admin_email_address": {
+                "Ref": "adminEmailAddress"
+              }
+            }
+          },
+          "apache": {
+            "default_modules": [
+              "alias",
+              "auth_basic",
+              "authn_file",
+              "authz_default",
+              "authz_groupfile",
+              "authz_host",
+              "authz_user",
+              "autoindex",
+              "deflate",
+              "dir",
+              "env",
+              "headers",
+              "log_config",
+              "logio",
+              "mime",
+              "negotiation",
+              "proxy_http",
+              "proxy",
+              "rewrite",
+              "setenvif",
+              "status",
+              "vhost_alias"
+            ]
+
+          },
+          "jenkins": {
+            "master": {
+              "install_method": "package"
+            },
+            "notifications": {
+              "enabled": "false"
+            },
+            "http_proxy": {
+              "variant": "apache2",
+              "host_aliases": [ "jenkins"]
+            },
+            "server": {
+              "plugins": [
+              {
+                "name": "analysis-core",
+                "version": "1.65"
+              },
+              {
+                "name": "ansicolor",
+                "version": "0.4.1"
+              },
+              {
+                "name": "antisamy-markup-formatter",
+                "version": "1.3"
+              },
+              {
+                "name": "audit-trail",
+                "version": "2.1"
+              },
+              {
+                "name": "brakeman",
+                "version": "0.7"
+              },
+              {
+                "name": "build-pipeline-plugin",
+                "version": "1.4.5"
+              },
+              {
+                "name": "buildresult-trigger",
+                "version": "0.17"
+              },
+              {
+                "name": "conditional-buildstep",
+                "version": "1.3.3"
+              },
+              {
+                "name": "config-file-provider",
+                "version": "2.7.5"
+              },
+              {
+                "name": "configurationslicing",
+                "version": "1.40"
+              },
+              {
+                "name": "cucumber-reports",
+                "version": "0.0.23"
+              },
+              {
+                "name": "cvs",
+                "version": "2.12"
+              },
+              {
+                "name": "delivery-pipeline-plugin",
+                "version": "0.8.8"
+              },
+              {
+                "name": "email-ext",
+                "version": "2.39"
+              },
+              {
+                "name": "envinject",
+                "version": "1.90"
+              },
+              {
+                "name": "fstrigger",
+                "version": "0.39"
+              },
+              {
+                "name": "git",
+                "version": "2.3.1"
+              },
+              {
+                "name": "git-client",
+                "version": "1.12.0"
+              },
+              {
+                "name": "github",
+                "version": "1.10"
+              },
+              {
+                "name": "github-api",
+                "version": "1.59"
+              },
+              {
+                "name": "groovy",
+                "version": "1.24"
+              },
+              {
+                "name": "groovy-postbuild",
+                "version": "2.1"
+              },
+              {
+                "name": "htmlpublisher",
+                "version": "1.3"
+              },
+              {
+                "name": "ivytrigger",
+                "version": "0.33"
+              },
+              {
+                "name": "javadoc",
+                "version": "1.3"
+              },
+              {
+                "name": "jenkins-cloudformation-plugin",
+                "version": "0.14"
+              },
+              {
+                "name": "job-dsl",
+                "version": "1.27"
+              },
+              {
+                "name": "job-exporter",
+                "version": "0.4"
+              },
+              {
+                "name": "jquery",
+                "version": "1.7.2-1"
+              },
+              {
+                "name": "jquery-ui",
+                "version": "1.0.2"
+              },
+              {
+                "name": "junit",
+                "version": "1.3"
+              },
+              {
+                "name": "ldap",
+                "version": "1.11"
+              },
+              {
+                "name": "log-parser",
+                "version": "1.0.8"
+              },
+              {
+                "name": "mapdb-api",
+                "version": "1.0.6.0"
+              },
+              {
+                "name": "mailer",
+                "version": "1.12"
+              },
+              {
+                "name": "managed-scripts",
+                "version": "1.1.1"
+              },
+              {
+                "name": "matrix-auth",
+                "version": "1.2"
+              },
+              {
+                "name": "matrix-project",
+                "version": "1.4"
+              },
+              {
+                "name": "maven-plugin",
+                "version": "2.8"
+              },
+              {
+                "name": "multiple-scms",
+                "version": "0.3"
+              },
+              {
+                "name": "pam-auth",
+                "version": "1.2"
+              },
+              {
+                "name": "parameterized-trigger",
+                "version": "2.25"
+              },
+              {
+                "name": "postbuildscript",
+                "version": "0.16"
+              },
+              {
+                "name": "rake",
+                "version": "1.8.0"
+              },
+              {
+                "name": "rebuild",
+                "version": "1.22"
+              },
+              {
+                "name": "ruby-runtime",
+                "version": "0.12"
+              },
+              {
+                "name": "rubyMetrics",
+                "version": "1.6.3"
+              },
+              {
+                "name": "run-condition",
+                "version": "1.0"
+              },
+              {
+                "name": "rvm",
+                "version": "0.4"
+              },
+              {
+                "name": "scm-api",
+                "version": "0.2"
+              },
+              {
+                "name": "script-security",
+                "version": "1.12"
+              },
+              {
+                "name": "scripttrigger",
+                "version": "0.31"
+              },
+              {
+                "name": "subversion",
+                "version": "2.4.5"
+              },
+              {
+                "name": "token-macro",
+                "version": "1.10"
+              },
+              {
+                "name": "translation",
+                "version": "1.12"
+              },
+              {
+                "name": "urltrigger",
+                "version": "0.37"
+              },
+              {
+                "name": "ws-cleanup",
+                "version": "0.24"
+              },
+              {
+                "name": "xtrigger",
+                "version": "0.54"
+              }
+              ],
+                "install_method": "package",
+                "version": "1.593-1.1"
+            }
+          },
+          "rvm": {
+            "installs": {
+              "jenkins": {}
+            }
+          }
+        },
+        "DefaultInstanceProfileArn": {
+          "Fn::GetAtt": [
+            "OpsWorksInstanceProfile",
+          "Arn"
+            ]
+        },
+        "DefaultOs": "Amazon Linux",
+        "DefaultSubnetId": {
+          "Ref": "PrivateSubnetA"
+        },
+        "Name": {
+          "Ref": "AWS::StackName"
+        },
+        "ServiceRoleArn": {
+          "Fn::GetAtt": [
+            "OpsWorksServiceRole",
+          "Arn"
+            ]
+        },
+        "UseCustomCookbooks": true,
+        "UseOpsworksSecurityGroups": false,
+        "VpcId": {
+          "Ref": "VPC"
+        }
+      }
+    },
+    "jenkinslayer": {
+      "Type": "AWS::OpsWorks::Layer",
+      "Properties": {
+        "StackId": {
+          "Ref": "jenkinsstack"
+        },
+        "Name": "Jenkins Server Layer",
+        "Type": "custom",
+        "Shortname": "jenkins",
+        "EnableAutoHealing": "true",
+        "AutoAssignElasticIps": "false",
+        "AutoAssignPublicIps": "true",
+        "Attributes": {
+          "BundlerVersion": "1.3.5",
+          "PassengerVersion": "4.0.29",
+          "RailsStack": "apache_passenger",
+          "RubyVersion": "1.9.3",
+          "RubygemsVersion": "2.1.11"
+        },
+        "Packages": [
+          "readline-devel",
+          "libyaml-devel",
+          "libffi-devel",
+          "mlocate",
+          "libxml2",
+          "postgresql",
+          "postgresql-devel",
+          "memcached",
+          "ruby19-devel",
+          "libxml2-devel",
+          "libxslt-devel",
+          "git",
+          "make",
+          "gcc",
+          "hunspell",
+          "gettext",
+          "postfix",
+          "cyrus-sasl",
+          "cyrus-sasl-devel",
+          "sqlite"
+        ],
+        "CustomSecurityGroupIds": [
+        {
+          "Ref": "jenkinsSecurityGroup"
+        }
+        ],
+        "CustomRecipes": {
+          "Deploy": [
+            "jenkins::master",
+            "rvm-config::keys",
+            "rvm-config::permissions",
+            "rvm::system_install",
+            "rvm::user_install",
+            "rvm-config::rubies",            
+            "apache-configuration::jenkins-reverseproxy",
+            "jenkins-configuration::vars",
+            "jenkins-configuration::install_plugins",
+            "jenkins-configuration::setup_email_plugin",
+            "jenkins-configuration::jobs",
+            "opsworks_nodejs",
+            "jenkins-configuration::users"
+          ]
+        }
+      }
+    },
+    "jenkinsSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Allow inbound requests from the ELB to the Jenkins instance",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "SecurityGroupIngress": [
+        {
+          "IpProtocol": "tcp",
+          "FromPort": "22",
+          "ToPort": "22",
+          "SourceSecurityGroupId": {
+            "Ref": "ELBSecurityGroup"
+          }
+        },
+        {
+          "IpProtocol": "tcp",
+          "FromPort": "22",
+          "ToPort": "22",
+          "SourceSecurityGroupId": {
+            "Ref": "BastionSecurityGroup"
+          }
+        },
+        {
+          "IpProtocol": "tcp",
+          "FromPort": "80",
+          "ToPort": "80",
+          "SourceSecurityGroupId": {
+            "Ref": "ELBSecurityGroup"
+          }
+        },
+        {
+          "IpProtocol": "tcp",
+          "FromPort": "443",
+          "ToPort": "443",
+          "SourceSecurityGroupId": {
+            "Ref": "ELBSecurityGroup"
+          }
+        },
+        {
+          "IpProtocol": "tcp",
+          "FromPort": "8080",
+          "ToPort": "8080",
+          "SourceSecurityGroupId": {
+            "Ref": "ELBSecurityGroup"
+          }
+        },
+        {
+          "IpProtocol": "tcp",
+          "FromPort": "9418",
+          "ToPort": "9418",
+          "SourceSecurityGroupId": {
+            "Ref": "ELBSecurityGroup"
+          }
+        }
+        ],
+          "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "9418",
+            "ToPort": "9418",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+    "jenkins": {
+      "Type": "AWS::OpsWorks::Instance",
+      "Properties": {
+        "Architecture": "x86_64",
+        "InstallUpdatesOnBoot": true,
+        "InstanceType": "c3.large",
+        "LayerIds": [
+        {
+          "Ref": "jenkinslayer"
+        }
+        ],
+        "Os": "Amazon Linux 2014.09",
+        "RootDeviceType": "ebs",
+        "StackId": {
+          "Ref": "jenkinsstack"
+        }
+      }
+    },
+    "OpsWorksServiceRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": [
+                "opsworks.amazonaws.com"
+                ]
+            },
+            "Action": [
+              "sts:AssumeRole"
+              ]
+          }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+        {
+          "PolicyName": "opsworks-service",
+          "PolicyDocument": {
+            "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "*"
+            }
+            ]
+          }
+        }
+        ]
+      }
+    },
+    "OpsWorksInstanceRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": [
+                "ec2.amazonaws.com"
+                ]
+            },
+            "Action": [
+              "sts:AssumeRole"
+              ]
+          }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+        {
+          "PolicyName": "opsworks-service",
+          "PolicyDocument": {
+            "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "*"
+            }
+            ]
+          }
+        }
+        ]
+      }
+    },
+    "OpsWorksInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [
+        {
+          "Ref": "OpsWorksInstanceRole"
+        }
+        ]
+      }
+    },
+    "EmailUser": {
+      "Type": "AWS::IAM::User"
+    },
+    "EmailUserPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "EmailUser",
+        "PolicyDocument": {
+          "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": "ses:SendRawEmail",
+            "Resource": "*"
+          }
+          ]
+        },
+        "Users": [
+        {
+          "Ref": "EmailUser"
+        }
+        ]
+      }
+    },
+    "EmailUserKeys": {
+      "Type": "AWS::IAM::AccessKey",
+      "Properties": {
+        "UserName": {
+          "Ref": "EmailUser"
+        }
+      }
+    },
+    "ELBSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Allow inbound access to the ELB",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "SecurityGroupIngress": [
+        {
+          "IpProtocol": "tcp",
+          "FromPort": "80",
+          "ToPort": "80",
+          "CidrIp": "0.0.0.0/0"
+        }
+        ],
+          "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+    "ServerGroup": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "Properties": {
+        "AvailabilityZones": [
+          {
+            "Ref": "AvailabilityZone"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "Hostname"
+            },
+            "PropagateAtLaunch": "true"
+          },
+          {
+            "Key": "ansible:service",
+            "Value": {
+              "Ref": "Hostname"
+            },
+            "PropagateAtLaunch": "true"
+          },
+          {
+            "Key": "ansible:environment",
+            "Value": {
+              "Ref": "Environment"
+            },
+            "PropagateAtLaunch": "true"
+          }
+        ],
+        "LaunchConfigurationName": {
+          "Ref": "LaunchConfig"
+        },
+        "MinSize": "1",
+        "MaxSize": "1",
+        "VPCZoneIdentifier": [
+          {
+            "Ref": "SubnetId"
+          }
+        ],
+        "LoadBalancerNames": [
+          {
+            "Ref": "ElasticLoadBalancer"
+          }
+        ]
+      }
+    },
+    "LaunchConfig": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties": {
+        "IamInstanceProfile": "s3Role",
+        "AssociatePublicIpAddress": "true",
+        "ImageId": {
+          "Ref": "InstanceAmi"
+        },
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash\n",
+                "# update bootstrap for bugfixes/security issues\n",
+                "yum update -y aws-cfn-bootstrap\n",
+                "# enable EPEL",
+                "yum-config-manager --enable epel\n",
+                "# run aws cfn-init\n",
+                "/opt/aws/bin/cfn-init -v -s ",
+                {
+                  "Ref": "AWS::StackId"
+                },
+                " -r LaunchConfig ",
+                "         --region ",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ";\n"
+              ]
+              ]
+          }
+        },
+        "SecurityGroups": [
+          {
+            "Ref": "InstanceSecurityGroup"
+          },
+          {
+            "Ref": "AutoScaleSecurityGroup"
+          },
+          {
+            "Fn::Select": [
+              "0",
+              {
+                "Ref": "SecurityGroupIds"
+              }
+            ]
+          }
+        ],
+        "InstanceType": {
+          "Ref": "InstanceType"
+        },
+        "KeyName": {
+          "Ref": "KeyName"
+        }
+      },
+      "Metadata": {
+        "AWS::CloudFormation::Authentication": {
+          "rolebased": {
+            "type": "S3",
+            "roleName": "s3Role"
+          }
+        },
+        "AWS::CloudFormation::Init": {
+          "config": {
+            "packages": {
+              "rpm": {
+                "chefdk": "https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chefdk-0.3.5-1.x86_64.rpm"
+              },
+              "yum": {
+                "gcc": [],
+                "gcc-c++": [],
+                "glibc-devel": [],
+                "git": []
+              },
+              "rubygems": {
+                "berkshelf": [ "3.1.3" ]
+              }
+
+              
+            },
+            "files": { },
+            "services": { },            },
+            "groups": { },
+            "users": { },
+            "commands": {
+              "00-setup-chef-repos": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "mkdir -p /opt/aws/opsworks/current;",
+                      "mkdir -p /var/lib/aws/opsworks/data/nodes;",
+                      "mkdir -p /var/lib/aws/opsworks/data/data_bags",
+                      "git clone https://github.com/stelligent/honolulu_jenkins_cookbooks.git /opt/aws/opsworks/current;",
+                      "berks vendor"
+                    ]
+                  ]
+                },
+                "waitAfterCompletion": "0",
+                "ignoreErrors": "true"
+              },
+              "01-run-knife": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "knife"
+                    ]
+                  ]
+                },
+                "waitAfterCompletion": "0",
+                "ignoreErrors": "true"
+              },
+              "yy-motd": {
+                "command": "echo \"$MOTD\" > /etc/motd",
+                "env": {
+                  "MOTD": "I am spawned from honolulu-purecfn.template"
+                },
+                "cwd": "/tmp",
+                "test": "/usr/bin/test \"! -e /etc/motd\"",
+                "ignoreErrors": "false"
+              }
+            }
+          }
+        }
+      }
+    },
+    "JenkinsElasticLoadBalancer": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties": {
+        "SecurityGroups": [
+        {
+          "Ref": "ELBSecurityGroup"
+        }
+        ],
+          "Subnets": [
+          {
+            "Ref": "PublicSubnet"
+          }
+        ],
+          "Listeners": [
+          {
+            "LoadBalancerPort": "80",
+            "InstancePort": "80",
+            "Protocol": "TCP"
+          }
+        ],
+          "HealthCheck": {
+            "Target": "TCP:80",
+            "HealthyThreshold": "3",
+            "UnhealthyThreshold": "5",
+            "Interval": "90",
+            "Timeout": "60"
+          }
+      }
+    }
+  },
+  "Outputs": {
+    "StackId": {
+      "Value": {
+        "Ref": "jenkinsstack"
+      }
+    },
+    "VPC": {
+      "Value": {
+        "Ref": "VPC"
+      }
+    },
+    "PublicSubnet": {
+      "Value": {
+        "Ref": "PublicSubnet"
+      }
+    },
+    "PrivateSubnetA": {
+      "Value": {
+        "Ref": "PrivateSubnetA"
+      }
+    },
+    "PrivateSubnetB": {
+      "Value": {
+        "Ref": "PrivateSubnetB"
+      }
+    }
+  }
+}
