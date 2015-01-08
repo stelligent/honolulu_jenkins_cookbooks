@@ -11,7 +11,6 @@
         "recipe[jenkins-configuration::install_plugins]",
         "recipe[jenkins-configuration::setup_email_plugin]",
         "recipe[jenkins-configuration::jobs]",
-        "recipe[opsworks_nodejs]",
         "recipe[jenkins-configuration::users]"
     ]
 }
