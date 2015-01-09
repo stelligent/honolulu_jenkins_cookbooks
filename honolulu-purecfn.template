@@ -1413,6 +1413,7 @@
                 "libxslt-devel": [],
                 "git": [],
                 "make": [],
+                "patch": [],
                 "gcc": [],
                 "hunspell": [],
                 "gettext": [],
