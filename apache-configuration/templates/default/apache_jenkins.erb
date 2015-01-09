@@ -1,6 +1,6 @@
 <% if @www_redirect -%>
 <VirtualHost *:80>
-  ServerName        www.<%= @host_name %>
+  ServerName        jenkins
 <% node['jenkins']['http_proxy']['host_aliases'].each do |a| -%>
   ServerAlias       www.<%= a %>
 <% end -%>
