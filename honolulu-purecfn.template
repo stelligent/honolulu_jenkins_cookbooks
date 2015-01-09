@@ -1449,7 +1449,10 @@
                     ]
                   ]
                 },
-                "env" : { "HOME" : "/root" },
+                "env" : {
+                  "HOME" : "/root",
+                  "PATH" : "/sbin:/bin:/usr/sbin:/usr/bin:/opt/aws/bin:/opt/chefdk/bin"
+                },
                 "waitAfterCompletion": "0",
                 "ignoreErrors": "true"
               },
@@ -1458,11 +1461,14 @@
                   "Fn::Join": [
                     "",
                     [
-                      "/opt/chefdk/bin/chef-client -z -j custom.json"
+                      "/opt/chefdk/bin/chef-client -c chef-zero-config.rb"
                     ]
                   ]
                 },
-                "env" : { "HOME" : "/root" },
+                "env" : {
+                  "HOME" : "/root",
+                  "PATH" : "/sbin:/bin:/usr/sbin:/usr/bin:/opt/aws/bin:/opt/chefdk/bin"
+                },
                 "cwd" : "/opt/aws/opsworks/current",
                 "waitAfterCompletion": "0",
                 "ignoreErrors": "true"
