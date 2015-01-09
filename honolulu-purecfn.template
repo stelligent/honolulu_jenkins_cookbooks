@@ -1421,7 +1421,8 @@
                 "postfix": [],
                 "cyrus-sasl": [],
                 "cyrus-sasl-devel": [],
-                "sqlite" : []
+                "sqlite" : [],
+                "sqlite-devel" : []
                 },
               "rubygems": { }
             },
