@@ -948,9 +948,8 @@
       "Type": "AWS::AutoScaling::AutoScalingGroup",
       "Properties": {
         "AvailabilityZones": [
-          {
-            "Ref": "AvailabilityZone"
-          }
+          { "Fn::FindInMap": [ "SubnetAZ", { "Ref" : "AWS::Region" }, "Private1" ] },
+          { "Fn::FindInMap": [ "SubnetAZ", { "Ref" : "AWS::Region" }, "Private2" ] }
         ],
         "Tags": [
           {
