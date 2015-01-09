@@ -1415,6 +1415,7 @@
                 "make": [],
                 "patch": [],
                 "gcc": [],
+                "gcc-c++": [],
                 "hunspell": [],
                 "gettext": [],
                 "postfix": [],
