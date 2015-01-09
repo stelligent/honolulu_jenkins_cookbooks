@@ -75,6 +75,9 @@ bundle exec cucumber --color \
          --format json \
          --out jenkins_cucumber.json \
          --tag @pipeline \
+         <% if ! node['jenkins']['opsworks'] -%>
+         --tag ~@opsworks \
+         <% end -%>
          pipeline/features
 </command>
     </hudson.tasks.Shell>
