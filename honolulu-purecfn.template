@@ -966,7 +966,10 @@
         "MaxSize": "1",
         "VPCZoneIdentifier": [
           {
-            "Ref": "SubnetId"
+            "Ref": "PrivateSubnetA"
+          },
+          {
+            "Ref": "PrivateSubnetB"
           }
         ],
         "LoadBalancerNames": [
