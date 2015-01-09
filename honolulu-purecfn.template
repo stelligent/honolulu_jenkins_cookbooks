@@ -1434,7 +1434,7 @@
                     [
                       "mkdir -p /opt/aws/opsworks/current;",
                       "mkdir -p /var/lib/aws/opsworks/data/nodes;",
-                      "mkdir -p /var/lib/aws/opsworks/data/data_bags",
+                      "mkdir -p /var/lib/aws/opsworks/data/data_bags;",
                       "git clone https://github.com/stelligent/honolulu_jenkins_cookbooks.git /opt/aws/opsworks/current;",
                       "cd /opt/aws/opsworks/current;berks vendor;",
                       "aws --region ",
