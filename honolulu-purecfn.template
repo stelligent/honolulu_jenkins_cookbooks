@@ -1128,7 +1128,8 @@
               "setenvif",
               "status",
               "vhost_alias"
-            ]
+            ],
+            "version" : "2.2"
           },
           "jenkins": {
             "master": {
