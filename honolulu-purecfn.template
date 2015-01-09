@@ -1867,7 +1867,26 @@
                 "chefdk": "https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chefdk-0.3.5-1.x86_64.rpm"
               },
               "yum": {
-                "git": []
+                "readline-devel": [],
+                "libyaml-devel": [],
+                "libffi-devel": [],
+                "mlocate": [],
+                "libxml2": [],
+                "postgresql": [],
+                "postgresql-devel": [],
+                "memcached": [],
+                "ruby19-devel": [],
+                "libxml2-devel": [],
+                "libxslt-devel": [],
+                "git": [],
+                "make": [],
+                "gcc": [],
+                "hunspell": [],
+                "gettext": [],
+                "postfix": [],
+                "cyrus-sasl": [],
+                "cyrus-sasl-devel": [],
+                "sqlite" : []
                 },
               "rubygems": { }
             },
