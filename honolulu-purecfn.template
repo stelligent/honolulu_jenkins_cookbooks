@@ -955,23 +955,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": {
-              "Ref": "Hostname"
-            },
-            "PropagateAtLaunch": "true"
-          },
-          {
-            "Key": "ansible:service",
-            "Value": {
-              "Ref": "Hostname"
-            },
-            "PropagateAtLaunch": "true"
-          },
-          {
-            "Key": "ansible:environment",
-            "Value": {
-              "Ref": "Environment"
-            },
+            "Value": "honolulu-jenkins",
             "PropagateAtLaunch": "true"
           }
         ],
@@ -1034,9 +1018,7 @@
             "Ref": "jenkinsSecurityGroup"
           }
         ],
-        "InstanceType": {
-          "Ref": "InstanceType"
-        },
+        "InstanceType": "m3.medium",
         "KeyName": {
           "Ref": "KeyName"
         }
