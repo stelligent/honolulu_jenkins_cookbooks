@@ -1449,18 +1449,21 @@
                     ]
                   ]
                 },
+                "env" : { "HOME" : "/root" },
                 "waitAfterCompletion": "0",
                 "ignoreErrors": "true"
               },
-              "01-run-knife": {
+              "01-run-chef": {
                 "command": {
                   "Fn::Join": [
                     "",
                     [
-                      "knife"
+                      "/opt/chefdk/bin/chef-client -z -j custom.json"
                     ]
                   ]
                 },
+                "env" : { "HOME" : "/root" },
+                "cwd" : "/opt/aws/opsworks/current",
                 "waitAfterCompletion": "0",
                 "ignoreErrors": "true"
               },
