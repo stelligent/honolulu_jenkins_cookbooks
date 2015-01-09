@@ -954,7 +954,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": "honolulu-jenkins",
+            "Value": {"Fn::Join": ["", [ { "Ref": "AWS::StackName" }, " - Jenkins server" ] ] },
             "PropagateAtLaunch": "true"
           }
         ],
@@ -981,7 +981,7 @@
     "JenkinsLaunchConfig": {
       "Type": "AWS::AutoScaling::LaunchConfiguration",
       "Properties": {
-        "IamInstanceProfile": "s3Role",
+        "IamInstanceProfile": { "Ref" : "OpsWorksInstanceProfile" },
         "AssociatePublicIpAddress": "true",
         "ImageId": {
           "Fn::FindInMap": [
@@ -1005,7 +1005,7 @@
                 {
                   "Ref": "AWS::StackId"
                 },
-                " -r LaunchConfig ",
+                " -r JenkinsLaunchConfig ",
                 "         --region ",
                 {
                   "Ref": "AWS::Region"
@@ -1015,7 +1015,7 @@
               ]
           }
         },
-        "SecurityGroupIds": [
+        "SecurityGroups": [
           {
             "Ref": "jenkinsSecurityGroup"
           }
