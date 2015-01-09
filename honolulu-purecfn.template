@@ -1132,6 +1132,7 @@
             "version" : "2.2"
           },
           "jenkins": {
+            "opsworks": false,
             "master": {
               "install_method": "package"
             },
@@ -1431,7 +1432,20 @@
             "groups": { },
             "users": { },
             "commands": {
-              "00-setup-chef-repos": {
+              "00-set-hostname" : {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "sed 's/^HOSTNAME.*/HOSTNAME=jenkins1/' -i /etc/sysconfig/network;",
+                      "hostname jenkins1"
+                    ]
+                  ]
+                },
+                "waitAfterCompletion": "0",
+                "ignoreErrors": "true"
+              },
+              "10-setup-chef-repos": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1460,7 +1474,7 @@
                 "waitAfterCompletion": "0",
                 "ignoreErrors": "true"
               },
-              "01-run-chef": {
+              "11-run-chef": {
                 "command": {
                   "Fn::Join": [
                     "",
