@@ -1,4 +1,4 @@
-  ServerName        <%= @host_name %>
+  ServerName        jenkins1
   ProxyRequests     Off
 <% node['jenkins']['http_proxy']['host_aliases'].each do |a| -%>
   ServerAlias       <%= a %>
