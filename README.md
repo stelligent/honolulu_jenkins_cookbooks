@@ -33,7 +33,7 @@ The easier one is probably to clone this repository and run the Ruby script insi
 
 Once both of those are installed, you can run this command to set everything up:
 
-```ruby go --region aws-region-to-build-in --keyname your-ec2-keypair-name --domain yourdomain.com --email youremail@example.com```
+    ruby go --region aws-region-to-build-in --keyname your-ec2-keypair-name --domain yourdomain.com --email youremail@example.com
 
 The parameters are:
 
