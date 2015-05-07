@@ -45,7 +45,7 @@ The parameters are:
 
 ###Current Known Issues###
 * **--no-opsworks**: The build currently fails. The stack completes, but chef doesnt set up Jenkins properly.
-* **create-new-jenkins**: The create-new-jenkins job within Jenkins fails to properly spin up a new working Jenkins instance. (OpsWorks failure.log: HTTP Request Returned 404 Not Found: Object not found: /reports/nodes/jenkins1.localdomain/runs)
+* **create-new-jenkins**: The *create-new-jenkins* job within Jenkins fails to properly spin up a new working Jenkins instance. (OpsWorks failure.log: HTTP Request Returned 404 Not Found: Object not found: /reports/nodes/jenkins1.localdomain/runs)
 
 Manual Template Option
 ----------------------
@@ -63,7 +63,11 @@ The Jenkins template also supports two other optional parameters: _repository_ a
 
     --parameters ParameterKey=repository,ParameterValue=https://github.com/yourgithubrepo.git
     --parameters ParameterKey=branch,ParameterValue=your_branch_name
-    
+
+Jenkins Access
+==============
+Once the stack is complete, Jenkins will be setup behind an ELB in the region selected. Point your browser to the DNS Name assigned to the Load Balancer for Jenkins. 
+
 **Note**: When your Jenkins server comes up, it will have security turned on. The username / password will be admin / admin, though you'll likely want to change that.
 
 * Log in to Jenkins as admin
@@ -71,6 +75,8 @@ The Jenkins template also supports two other optional parameters: _repository_ a
 * Click the "admin" link
 * Click "configure"
 * Punch in your new password in the password fields and click save.
+
+Once you are in, you can run the *become-production-jenkins* job which will setup Route53 to point the provided domain to the Jenkins ELB.
 
 Updating Jenkins Configuration
 ==============================
