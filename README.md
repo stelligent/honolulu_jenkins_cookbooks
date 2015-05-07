@@ -1,13 +1,12 @@
 honolulu_jenkins_cookbooks
 ======================
-
 A collection of cookbooks and configuration used to set up a Jenkins server for the Honolulu application. You can point to this repo with OpsWorks if you want to create a custom Jenkins layer.
 
 These cookbooks reference open source cookbooks that are managed using berkshelf, since it makes everything way easier. If you need to update the open source cookbooks, it's simple enough; just add the new dependency to Berksfile, and then run these commands:
 
 ```
 gem install bundler
-bundler install
+bundle install
 berks install
 ```
 
@@ -20,28 +19,37 @@ The custom cookbooks are as follows:
 * jenkins-configuration: recipes to configure Jenkins jobs, views, etc.
 * rvm-config: recipes to perform post-install RVM configuration
 
-how to use this repository
+How to use this repository
 ======================
-
 This repository is designed to be used as the custom Chef cookbooks repository for a Jenkins stack built using Amazon's OpsWorks service.
 
 We've designed the infrastructure for Honolulu Answers, as well as the Jenkins server, to be run in a VPC.
 
 In the repository is a CloudFormation template that will handle building the appropriate VPC, IAM roles and OpsWorks stack. To run the template, you have a couple options.
 
-The easier one is probably to clone this repository and run the Ruby script inside that will spin up the VPC, and then Jenkins server inside of it. To do this, [Ruby](https://www.ruby-lang.org/en/) needs to be installed on your system. You should probably install it with [RVM](http://rvm.io/) though. You'll also need the [AWS SDK for Ruby 2.0](https://github.com/aws/aws-sdk-core-ruby) which can be installed with `bundler install`.
+Fully Automated, One Button/Command Setup
+-----------------------------------------
+The easier one is probably to clone this repository and run the Ruby script inside that will spin up the VPC, and then Jenkins server inside of it. To do this, [Ruby](https://www.ruby-lang.org/en/) needs to be installed on your system. You should probably install it with [RVM](http://rvm.io/) though. You'll also need the [AWS SDK for Ruby 2.0](https://github.com/aws/aws-sdk-core-ruby) which can be installed with `bundle install`.
 
 Once both of those are installed, you can run this command to set everything up:
 
-    ``ruby create_vpc_and_jenkins.rb --region aws-region-to-build-in --keyname your-ec2-keypair-name --domain yourdomain.com``
+    ``ruby go --region aws-region-to-build-in --keyname your-ec2-keypair-name --domain yourdomain.com --email youremail@example.com``
 
 The parameters are:
 
 * **keyname**: the name of an EC2 keypair that exists in that region. It will be linked to the NAT and Bastion host boxes that the VPC template creates.
 * **domain**: The Route 53 hosted zone that Jenkins will manipulate for its Blue/Green deployments. If you don't have a domain set up, you can leave this blank, but the Blue/Green jobs will fail if you try to run them.
 * **region**: The AWS region you want to run everything in. Defaults to US-West-2, Oregon.
+* **email**: The email address of the admin who will receive build and pipeline acceptance emails.
+* **--no-opsworks**: Creates the environment without the use of OpsWorks. **This is a WIP, currently not recommended**
 
- Your other option is to run the template manually yourself. You will need the [AWS CLI tool installed and configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html). Then, just pull down the repo and run these commands:
+###Current Known Issues###
+* **--no-opsworks**: The build currently fails. The stack completes, but chef doesnt set up Jenkins properly.
+* **create-new-jenkins**: The create-new-jenkins job within Jenkins fails to properly spin up a new working Jenkins instance. (OpsWorks failure.log: HTTP Request Returned 404 Not Found: Object not found: /reports/nodes/jenkins1.localdomain/runs)
+
+Manual Template Option
+----------------------
+Your other option is to run the template manually yourself. You will need the [AWS CLI tool installed and configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html). Then, just pull down the repo and run these commands:
 
     aws cloudformation create-stack --stack-name "Honolulu" --template-body "`cat honolulu.template`" --region your-region --parameters ParameterKey=KeyName,ParameterValue=your-ec2-keypair -capabilities="CAPABILITY_IAM" --parameters ParameterKey=domain,ParameterValue="yourdomain.com"   ParameterKey=adminEmailAddress,ParameterValue="you@example.com"
 
@@ -66,7 +74,6 @@ The Jenkins template also supports two other optional parameters: _repository_ a
 
 Updating Jenkins Configuration
 ==============================
-
 If you've made changes to the Jenkins server configuration, it will not be persisted if the server goes down. If you'd like to commit that configuration to a source control repo, fork this repo and look in the jenkins-configuration cookbook. In there you will find various ERB template files, each full of XML. These are the raw Jenkins configuration files. You can find this XML by configuring the jobs on the Jenkins server, and then changing the URL. The Jenkins job configure URL will end in /jobname/configure; if you go to /jobname/config.xml you'll see the pure XML. 
 
 The templates don't do much templating (only the source control repo URL) so you can just copy the XML and paste it into the template file.
@@ -84,7 +91,6 @@ If you like what you see, you can commit the changes.
 
 Pushing Jenkins changes to production
 =====================================
-
 Most of the job knowledge is stored in scripts that are stored in the application repository, but if you create or delete jobs, or make configuration changes to the jobs (...which really shouldn't be necessary!) you may need to push a new Jenkins out to the world.
 
 You have two options: you can manually run the CloudFormation script as detailed above, or there are two Jenkins jobs you can run to update the Jenkins server.
