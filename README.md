@@ -51,7 +51,7 @@ Manual Template Option
 ----------------------
 Your other option is to run the template manually yourself. You will need the [AWS CLI tool installed and configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html). Then, just pull down the repo and run these commands:
 
-    aws cloudformation create-stack --stack-name "Honolulu" --template-body "`cat honolulu.template`" --region your-region --parameters ParameterKey=KeyName,ParameterValue=your-ec2-keypair -capabilities="CAPABILITY_IAM" --parameters ParameterKey=domain,ParameterValue="yourdomain.com"   ParameterKey=adminEmailAddress,ParameterValue="you@example.com"
+    aws cloudformation create-stack --stack-name "Honolulu" --template-body "`cat honolulu.template`" --region your-region --capabilities="CAPABILITY_IAM" --parameters ParameterKey=domain,ParameterValue="yourdomain.com" ParameterKey=adminEmailAddress,ParameterValue="you@example.com" ParameterKey=KeyName,ParameterValue=your-ec2-keypair
 
 The parameters for those templates are as follows:
 
