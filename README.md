@@ -25,7 +25,14 @@ This repository is designed to be used as the custom Chef cookbooks repository f
 
 We've designed the infrastructure for Honolulu Answers, as well as the Jenkins server, to be run in a VPC.
 
-In the repository is a CloudFormation template that will handle building the appropriate VPC, IAM roles and OpsWorks stack. To run the template, you have a couple options.
+In the repository is a CloudFormation template that will handle building the appropriate VPC, IAM roles and OpsWorks stack. When creating the stack, you will provide a domain that you have control of in Route53. 
+In Route53, create the following CNAMEs for the subdomains that the stack will use:
+
+* **appdemo** - Blue/Green will point this subdomain to the Production environment
+* **honolulu** - Blue/Green will point this subdomain to the Production environment
+* **samplepipeline** - become_production_jenkins job will point this subdomain to the current Jenkins
+
+To run the template, you have a couple options:
 
 Fully Automated, One Button/Command Setup
 -----------------------------------------
@@ -42,10 +49,6 @@ The parameters are:
 * **region**: The AWS region you want to run everything in. Defaults to US-West-2, Oregon.
 * **email**: The email address of the admin who will receive build and pipeline acceptance emails.
 * **--no-opsworks**: Creates the environment without the use of OpsWorks. **This is a WIP, currently not recommended**
-
-###Current Known Issues###
-* **--no-opsworks**: The build currently fails. The stack completes, but chef doesnt set up Jenkins properly.
-* **create-new-jenkins**: The *create-new-jenkins* job within Jenkins fails to properly spin up a new working Jenkins instance. (OpsWorks failure.log: HTTP Request Returned 404 Not Found: Object not found: /reports/nodes/jenkins1.localdomain/runs)
 
 Manual Template Option
 ----------------------
@@ -107,6 +110,16 @@ The two jobs in question are:
 * **become-production-jenkins**: this job will call the script to change the Route 53 entry for your pipeline resource record. Changing Route 53 entries is a huge pain, so maybe you would like to steal [the ruby script we wrote exactly for that purpose](https://github.com/stelligent/honolulu_answers/blob/master/pipeline/bin/route53switch.rb)?
 
 Then, when you need a new Jenkins, just run the create-new-jenkins job. Once it completes, go into the OpsWorks console to find your new stack, open it up, and then run the become-production-jenkins job on that server and it'll become the new production instance.
+
+Current Known Issues
+====================
+* **--no-opsworks**: The --no-opsworks option of the go script currently fails. The stack completes, but chef doesnt set up Jenkins properly. The same failures will occur if you run the honolulu-purecfn.template manually.
+* **create-new-jenkins**: The *create-new-jenkins* job within Jenkins fails to properly spin up a new working Jenkins instance. (OpsWorks failure.log: HTTP Request Returned 404 Not Found: Object not found: /reports/nodes/jenkins1.localdomain/runs)
+
+To-Do List
+==========
+* add automation to subdomain creation, so they don't have to be manually created beforehand
+
 
 Questions?
 ==========
