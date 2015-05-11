@@ -32,10 +32,11 @@ In Route53, create the following CNAMEs for the subdomains that the stack will u
 * **honolulu** - Blue/Green will point this subdomain to the Production environment
 * **samplepipeline** - become_production_jenkins job will point this subdomain to the current Jenkins
 
-To run the template, you have a couple options:
+## Launching the Pipeline
+From a development environment (see the [wiki](https://github.com/stelligent/stelligent_commons/wiki/Development-Environment-Setup)), you have a couple options to launch a complete Honolulu Answers pipeline:
 
-Fully Automated, One Button/Command Setup
------------------------------------------
+###Fully Automated, One Ruby Command Setup
+
 The easier one is probably to clone this repository and run the Ruby script inside that will spin up the VPC, and then Jenkins server inside of it. To do this, [Ruby](https://www.ruby-lang.org/en/) needs to be installed on your system. You should probably install it with [RVM](http://rvm.io/) though. You'll also need the [AWS SDK for Ruby 2.0](https://github.com/aws/aws-sdk-core-ruby) which can be installed with `bundle install`.
 
 Once both of those are installed, you can run this command to set everything up:
@@ -50,8 +51,8 @@ The parameters are:
 * **email**: The email address of the admin who will receive build and pipeline acceptance emails.
 * **--no-opsworks**: Creates the environment without the use of OpsWorks. **This is a WIP, currently not recommended**
 
-Manual Template Option
-----------------------
+### Manual Template Option
+
 Your other option is to run the template manually yourself. You will need the [AWS CLI tool installed and configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html). Then, just pull down the repo and run these commands:
 
     aws cloudformation create-stack --stack-name "Honolulu" --template-body "`cat honolulu.template`" --region your-region --capabilities="CAPABILITY_IAM" --parameters ParameterKey=domain,ParameterValue="yourdomain.com" ParameterKey=adminEmailAddress,ParameterValue="you@example.com" ParameterKey=KeyName,ParameterValue=your-ec2-keypair
