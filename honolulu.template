@@ -1238,6 +1238,7 @@
     "jenkins": {
       "Type": "AWS::OpsWorks::Instance",
       "Properties": {
+        "SshKeyName" : { "Ref" : "KeyName"},
         "Architecture": "x86_64",
         "InstallUpdatesOnBoot": true,
         "InstanceType": "c3.large",

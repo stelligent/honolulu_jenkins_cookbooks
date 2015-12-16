@@ -19,9 +19,9 @@ Feature: Scripted install of Jenkins
         When I run "hostname"
         Then I should see "jenkins1"
 
-    Scenario: Is ruby 1.9.3 installed
+    Scenario: Is ruby 2.0.0 installed
         When I run "ruby -v"
-        Then I should see "ruby 1.9.3"
+        Then I should see "ruby 2.0.0"
 
     Scenario: Is the server listening on port 80?
         When I run "netstat -antu | grep 80"
